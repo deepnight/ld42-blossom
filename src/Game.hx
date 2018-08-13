@@ -11,7 +11,7 @@ class Game extends mt.Process {
 
 	public var scroller : h2d.Layers;
 	public var vp : Viewport;
-	//public var fx : Fx;
+	public var fx : Fx;
 	public var level : Level;
 	//public var hero : en.Hero;
 	var clickTrap : h2d.Interactive;
@@ -21,6 +21,7 @@ class Game extends mt.Process {
 
 	public var hud : h2d.Flow;
 	public var treeRoot : en.Branch;
+	public var mouseScroll : { x:Int, y:Int, scrolling:Bool, active:Bool }
 	//public var cm : mt.deepnight.Cinematic;
 
 	public function new(ctx:h2d.Sprite) {
@@ -34,11 +35,14 @@ class Game extends mt.Process {
 
 		scroller = new h2d.Layers(root);
 		vp = new Viewport();
-		//fx = new Fx();
+		fx = new Fx();
 
 		clickTrap = new h2d.Interactive(1,1,Main.ME.root);
 		clickTrap.onPush = onMouseDown;
+		clickTrap.onRelease = onMouseUp;
 		clickTrap.enableRightButton = true;
+		mouseScroll = { x:0, y:0, scrolling:false, active:false } ;
+
 
 		mask = new h2d.Graphics(Main.ME.root);
 		mask.visible = false;
@@ -56,6 +60,10 @@ class Game extends mt.Process {
 		level = new Level();
 		var pt = level.getPixel(0x00FF00);
 		treeRoot = new en.Branch(pt.cx,pt.cy);
+		vp.repos();
+
+		for(pt in level.getPixels(0xFF0000))
+			new en.Obstacle(pt.cx, pt.cy);
 
 		onResize();
 	}
@@ -76,15 +84,27 @@ class Game extends mt.Process {
 
 	function onMouseDown(ev:hxd.Event) {
 		var m = getMouse();
+		mouseScroll.x = m.x;
+		mouseScroll.y = m.y;
+		mouseScroll.active = true;
+		mouseScroll.scrolling = false;
+	}
+
+	function onMouseUp(ev:hxd.Event) {
+		var m = getMouse();
+		mouseScroll.active = false;
+		if( mouseScroll.scrolling )
+			return;
 
 		var none = true;
 		for(e in Entity.ALL)
 			if( e.isAlive() && m.cx==e.cx && m.cy==e.cy ) {
-				none = false;
+				if( e.is(en.Branch) )
+					none = false;
 				e.onClick(ev.button);
 			}
 
-		if( none && ev.button==0 && energy>50 ) {
+		if( none && ev.button==0 && energy>Const.BUY ) {
 			var dh = new DecisionHelper(en.Branch.ALL);
 			dh.keepOnly( function(e) return e.isAlive() && MLib.fabs(e.cx-m.cx)<=1 && MLib.fabs(e.cy-m.cy)<=1 );
 			dh.score( function(e) return -e.distPxFree(m.x,m.y)*0.1 );
@@ -92,11 +112,12 @@ class Game extends mt.Process {
 			dh.score( function(e) return e.isBranchEnd() ? -5 : 0);
 			var best = dh.getBest();
 			if( best!=null ) {
-				energy-=50;
+				energy-=Const.BUY;
 				new en.Branch(m.cx, m.cy, best);
 			}
 		}
 	}
+
 
 	override public function onResize() {
 		super.onResize();
@@ -136,6 +157,11 @@ class Game extends mt.Process {
 	override function postUpdate() {
 		super.postUpdate();
 		_updateHud();
+		if( mouseScroll.scrolling ) {
+			var m = getMouse();
+			mouseScroll.x = m.x;
+			mouseScroll.y = m.y;
+		}
 	}
 
 	public function getMouse() {
@@ -163,6 +189,20 @@ class Game extends mt.Process {
 		//cm.update(dt);
 
 		super.update();
+
+		if( mouseScroll.active ) {
+			var m = getMouse();
+			if( !mouseScroll.scrolling && Lib.distance(m.x,m.y, mouseScroll.x,mouseScroll.y)>=5 ) {
+				trace("active");
+				mouseScroll.scrolling = true;
+			}
+
+			if( mouseScroll.scrolling ) {
+				mouseScroll.scrolling = true;
+				vp.dx -= (m.x-mouseScroll.x)*0.5;
+				vp.dy -= (m.y-mouseScroll.y)*0.5;
+			}
+		}
 
 		// Updates
 		for(e in Entity.ALL) if( !e.destroyed ) e.preUpdate(dt);

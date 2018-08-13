@@ -7,7 +7,7 @@ class Entity {
 
 	public var game(get,never) : Game; inline function get_game() return Game.ME;
 	public var level(get,never) : Level; inline function get_level() return Game.ME.level;
-	//public var fx(get,never) : Fx; inline function get_fx() return Game.ME.fx;
+	public var fx(get,never) : Fx; inline function get_fx() return Game.ME.fx;
 	public var destroyed(default,null) = false;
 	public var cd : mt.Cooldown;
 	public var dt : Float;
@@ -44,7 +44,7 @@ class Entity {
 
 		spr = new mt.heaps.slib.HSprite(Assets.tiles);
 		//spr = new mt.heaps.slib.HSprite(Assets.gameElements);
-		game.scroller.add(spr, Const.DP_MAIN);
+		game.scroller.add(spr, Const.DP_BG);
 		spr.setCenterRatio(0.5,0.5);
 		spr.colorAdd = cAdd = new h3d.Vector();
 	}

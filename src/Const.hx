@@ -8,9 +8,14 @@ class Const {
 
 	static var _inc=0;
 	public static var DP_BG = _inc++;
-	public static var DP_MAIN = _inc++;
+	public static var DP_FX_BG = _inc++;
+	public static var DP_SMOKE = _inc++;
 	public static var DP_TREE = _inc++;
 	public static var DP_FRONT = _inc++;
+	public static var DP_FX_FRONT = _inc++;
 	public static var DP_UI = _inc++;
 	public static var DP_TOP = _inc++;
+
+	public static var BUY = 50;
+	public static var SELL = Std.int(BUY*0.75);
 }

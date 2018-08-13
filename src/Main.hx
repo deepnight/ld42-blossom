@@ -13,6 +13,7 @@ class Main extends mt.Process {
 		Assets.init();
 		new Console();
 		cached = new h2d.CachedBitmap(root, 1,1);
+		cached.blendMode = None;
 		new Game( new h2d.Sprite(cached) );
 		onResize();
 	}

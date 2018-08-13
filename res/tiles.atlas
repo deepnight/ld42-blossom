@@ -1,61 +1,89 @@
 
 tiles.png
-size: 64,61
+size: 64,138
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
 backLeaves0
   rotate: false
-  xy: 33, 1
+  xy: 33, 60
   size: 30, 29
   orig: 32, 32
   offset: 1, 2
   index: -1
 branch0
   rotate: false
-  xy: 1, 35
+  xy: 1, 94
   size: 24, 14
   orig: 32, 16
   offset: 5, 1
   index: -1
 branch1
   rotate: false
-  xy: 33, 32
+  xy: 1, 126
   size: 24, 10
   orig: 32, 16
   offset: 5, 5
   index: -1
 branchCore0
   rotate: false
-  xy: 1, 51
+  xy: 45, 121
   size: 10, 9
   orig: 16, 16
   offset: 3, 4
   index: -1
 dirt0
   rotate: false
-  xy: 27, 44
+  xy: 27, 103
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
+dirtyBranch0
+  rotate: false
+  xy: 1, 110
+  size: 24, 14
+  orig: 32, 16
+  offset: 5, 1
+  index: -1
+dirtyBranch1
+  rotate: false
+  xy: 33, 91
+  size: 24, 10
+  orig: 32, 16
+  offset: 5, 5
+  index: -1
 empty
   rotate: false
-  xy: 13, 51
+  xy: 58, 1
   size: 3, 3
   orig: 1, 1
   offset: 0, -2
   index: -1
 leaves0
   rotate: false
-  xy: 1, 1
+  xy: 1, 60
   size: 30, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 smallLeaves0
   rotate: false
-  xy: 45, 44
+  xy: 27, 121
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+smoke0
+  rotate: false
+  xy: 1, 1
+  size: 55, 57
+  orig: 64, 64
+  offset: 5, 5
+  index: -1
+stripes0
+  rotate: false
+  xy: 45, 103
   size: 16, 16
   orig: 16, 16
   offset: 0, 0

@@ -49,7 +49,7 @@ class Branch extends Entity {
 			killClicks++;
 			blinkChildren(0xFF0000,true);
 			cd.setS("recentKillClick",3);
-			if( killClicks>=6 )
+			if( killClicks >= (isBranchEnd() ? 1 : 5) )
 				kill();
 		}
 	}
@@ -159,6 +159,12 @@ class Branch extends Entity {
 		leavesWrapper.y = spr.y + Math.cos(game.ftime*0.011+uid*0.5)*2 + (isRoot()?-8 : 0);
 		leavesWrapper.scaleX = spr.scaleX * power;
 		leavesWrapper.scaleY = spr.scaleY * power;
+
+		if( level.hasPollution(cx,cy) )
+			for(p in parts)
+				if( p.groupName=="branch" )
+					p.set("dirtyBranch",p.frame);
+
 	}
 
 	function getThickness() {
@@ -177,7 +183,7 @@ class Branch extends Entity {
 		hasGravity = true;
 		hasColl = true;
 		parent = null;
-		game.energy+=25;
+		game.energy+=Const.SELL;
 	}
 
 	override public function isAlive() {
@@ -206,16 +212,26 @@ class Branch extends Entity {
 				destroy();
 		}
 
-		if( isAlive() && power<1 )
-			power+=0.003*dt;
+		if( isAlive() ) {
+			if( level.hasPollution(cx,cy) )
+				power-=0.015*dt;
+			else if( power<1 )
+				power+=0.010*dt;
+			power = MLib.fclamp(power,0,1);
+		}
 
 		if( !cd.hasSetS("energyTick", 1) )  {
-			if( isRoot() )
-				game.energy+=2;
-			if( isBranchEnd() )
-				game.energy+=2*power;
-			else
-				game.energy-=1.5;
+			//if( isRoot() )
+				//game.energy+=2;
+			if( !level.hasPollution(cx,cy) )
+				if( isBranchEnd() )
+					game.energy+=4*power;
+				else
+					game.energy+=1.5*power;
+			//else if( level.hasPollution(cx,cy) )
+				//game.energy-=1.5;
+			//else
+				//game.energy-=0.5;
 		}
 
 		if( !cd.has("recentKillClick") )

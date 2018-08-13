@@ -8,6 +8,7 @@ class Level extends mt.Process {
 	public var wid : Int;
 	public var hei : Int;
 	var collMap : haxe.ds.Vector<Bool>;
+	public var pollMap : haxe.ds.Vector<Bool>;
 
 	public var debug : h2d.Graphics;
 	var pixels : Map<UInt, Array<CPoint>>;
@@ -18,12 +19,16 @@ class Level extends mt.Process {
 		wid = 48;
 		hei = 48;
 		collMap = new haxe.ds.Vector(wid*hei);
+		pollMap = new haxe.ds.Vector(wid*hei);
 
 		createRootInLayers(Game.ME.scroller, Const.DP_BG);
 
-		var mask = new h2d.Graphics(root);
-		mask.beginFill(0x212550,1);
-		mask.drawRect(0,0,wid*Const.GRID,hei*Const.GRID);
+		var mask = new h2d.Bitmap(h2d.Tile.fromColor(0x1D2045,1,1), root);
+		mask.scaleX = wid*Const.GRID;
+		mask.scaleY = wid*Const.GRID;
+		//var mask = new h2d.Graphics(root);
+		//mask.beginFill(0x2B2F68,1);
+		//mask.drawRect(0,0,wid*Const.GRID,hei*Const.GRID);
 
 		var bd = hxd.Res.level.toBitmap();
 		pixels = new Map();
@@ -99,6 +104,14 @@ class Level extends mt.Process {
 
 	public function setColl(x,y,v:Bool) {
 		collMap.set(coordId(x,y), v);
+	}
+
+	public function hasPollution(x:Int,y:Int) : Bool {
+		return !isValid(x,y) ? true : pollMap.get(coordId(x,y))==true;
+	}
+
+	public function setPollution(x,y,v:Bool) {
+		pollMap.set(coordId(x,y), v);
 	}
 
 	override public function update() {
