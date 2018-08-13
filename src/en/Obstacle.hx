@@ -36,11 +36,11 @@ class Obstacle extends Entity {
 		if( !level.hasPollution(cx-1,cy) || !level.hasPollution(cx+1,cy) || !level.hasPollution(cx,cy-1) || !level.hasPollution(cx,cy+1) ) {
 			if( !cd.hasSetS("fx",0.3) )
 				fx.smoke(centerX,centerY,0x992828);
+			spr.alpha += (0.20-spr.alpha)*0.03;
 		}
-		//else if( !cd.hasSetS("fx",2) )
-			//fx.largeSmoke(centerX,centerY,0x992828);
+		else
+			spr.alpha += (0.30-spr.alpha)*0.03;
 
-		spr.alpha += (0.15-spr.alpha)*0.03;
 	}
 
 	override public function update() {

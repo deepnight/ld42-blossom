@@ -221,20 +221,50 @@ class Fx extends mt.Process {
 		p.lifeS = 0.5;
 		p.delayS = 0.1;
 
-		var n = 20;
-		for(i in 0...n) {
+		//var n = 20;
+		//for(i in 0...n) {
+			//var a = 6.28 * i/n;
+			//var p = allocTopAdd(getTile("star"), x+Math.cos(a)*10, y+Math.sin(a)*10);
+			//p.colorize(c);
+			//p.moveAwayFrom(x,y, 2);
+			//p.frict = 0.9;
+			//p.rotation = a+1.57;
+			//p.dr = 0.1;
+			//p.lifeS = 0.5;
+		//}
 
-			var a = 6.28 * i/n;
-			var p = allocTopAdd(getTile("star"), x+Math.cos(a)*10, y+Math.sin(a)*10);
+		var n = 400;
+		for(i in 0...n) {
+			var a = 4*6.28 * i/n + rnd(0,0.1,true);
+			var d = r*(1-i/n) + rnd(0,5,true);
+			var p = allocTopAdd(getTile("star"), x+Math.cos(a)*d, y+Math.sin(a)*d);
 			p.colorize(c);
-			p.moveAwayFrom(x,y, 2);
-			p.frict = 0.9;
+			//p.moveAwayFrom(x,y, rnd(0.5,1));
 			p.rotation = a+1.57;
-			p.dr = 0.1;
-			p.lifeS = 0.5;
+			p.moveAng(a,1);
+			p.frict = 0.8;
+			p.lifeS = rnd(0.4,0.6);
+			//p.alphaFlicker = 0.5;
+			p.delayS = 0.8 * i/n;
 		}
+
 	}
 
+
+
+	public function cleanedUp(x:Float, y:Float, c:UInt) {
+		var n = 30;
+		for(i in 0...n) {
+			var a = 6.28 * i/n;
+			var d = rnd(1,10);
+			var p = allocTopAdd(getTile("dot"), x+Math.cos(a)*d, y+Math.sin(a)*d);
+			p.colorize(c);
+			p.moveAwayFrom(x,y, rnd(0.5,1));
+			p.frict = 0.8;
+			p.lifeS = rnd(1,3);
+			p.alphaFlicker = 0.5;
+		}
+	}
 
 
 	public function blossom(x:Float, y:Float, c:UInt) {

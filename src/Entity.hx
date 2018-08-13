@@ -104,6 +104,10 @@ class Entity {
 	public inline function irnd(min,max,?sign) return Lib.irnd(min,max,sign);
 	public inline function pretty(v,?p=1) return Lib.prettyFloat(v,p);
 
+	public function sightCheckCase(x:Int,y:Int) {
+		return mt.deepnight.Bresenham.checkThinLine(cx,cy,x,y, function(x,y) return !level.hasColl(x,y));
+	}
+
 	public inline function distCase(e:Entity) {
 		return Lib.distance(cx+xr, cy+yr, e.cx+e.xr, e.cy+e.yr);
 	}

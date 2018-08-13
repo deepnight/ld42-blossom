@@ -245,6 +245,7 @@ class Branch extends Entity {
 			power = MLib.fclamp(power,0,1);
 		}
 
+		// Energy consumption
 		if( !cd.hasSetS("energyTick", 1) )  {
 			if( !polluted && isBranchEnd() )
 				game.addEnergy(4*power);
@@ -253,7 +254,7 @@ class Branch extends Entity {
 				game.addEnergy(5*power);
 
 			if( !polluted && !isBranchEnd() && !isRoot() )
-				game.remEnergy(2);
+				game.remEnergy(1);
 		}
 
 		if( !cd.has("recentKillClick") )

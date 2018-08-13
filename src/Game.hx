@@ -53,9 +53,9 @@ class Game extends mt.Process {
 		mask.visible = false;
 		mask.beginFill(0x0,1);
 		mask.drawRect(0,0, 1, 1);
-		energy = 100;
+		energy = Const.BUY*5;
 		#if debug
-		energy = 1000;
+		energy = Const.MAX_ENERGY;
 		#end
 
 		hud = new h2d.Flow();
@@ -285,7 +285,7 @@ class Game extends mt.Process {
 		for(e in Entity.ALL) if( !e.destroyed ) e.postUpdate();
 		gc();
 
-		if( Key.isPressed(hxd.Key.ESCAPE) ) {
+		if( Key.isPressed(hxd.Key.R) ) {
 		}
 
 		var b = getParentBranchPreview(m.cx,m.cy,m.x,m.y);

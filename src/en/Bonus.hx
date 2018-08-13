@@ -40,8 +40,10 @@ class Bonus extends Entity {
 	function pickUp() {
 		var r = 12;
 		for(e in en.Obstacle.ALL)
-			if( distCase(e)<=r )
+			if( distCase(e)<=r ) {
+				fx.cleanedUp(e.centerX,e.centerY,0x0080FF);
 				e.destroy();
+			}
 		game.addEnergy(Const.BUY*4);
 
 		fx.cleanUp(centerX, centerY, Const.GRID*r, 0x159AEA);
@@ -56,7 +58,7 @@ class Bonus extends Entity {
 
 		if( !cd.hasSetS("check",0.15) ) {
 			for(e in en.Branch.ALL)
-				if( /*!level.hasPollution(e.cx,e.cy) &&*/ distCase(e)<=3 ) {
+				if( /*!level.hasPollution(e.cx,e.cy) &&*/ distCase(e)<=2 && sightCheckCase(e.cx,e.cy) ) {
 					pickUp();
 					break;
 				}
