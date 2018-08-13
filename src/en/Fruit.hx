@@ -46,20 +46,31 @@ class Fruit extends Entity {
 
 	override function onLand() {
 		super.onLand();
-		if( power>=1 && !cd.has("landed") )
+		if( power>=1 && !cd.has("landed") ) {
+			fx.plant(centerX, centerY, 0xD75C28);
 			new en.Branch(cx,cy);
+		}
 		cd.setS("landed",Const.INFINITE);
 	}
 
-	var fallCpt = 0.;
+	override public function onClick(bt:Int) {
+		super.onClick(bt);
+		if( power>=1 && !hasGravity ) {
+			dx = rnd(0.15,0.20);
+			dy = -0.3;
+			parent = null; // fall
+		}
+	}
+
+	//var fallCpt = 0.;
 	override public function update() {
 		super.update();
 
-		if( power>=1 && isAlive() ) {
-			fallCpt+=dt;
-			if( fallCpt>=Const.FPS*3 )
-				parent = null;
-		}
+		//if( power>=1 && isAlive() ) {
+			//fallCpt+=dt;
+			//if( fallCpt>=Const.FPS*3 )
+				//parent = null;
+		//}
 
 		if( !hasGravity && ( parent==null || !parent.isAlive() || level.hasPollution(cx,cy) ) ) {
 			hasGravity = true;

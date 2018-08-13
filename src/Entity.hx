@@ -229,7 +229,7 @@ class Entity {
 				if( yr>1 && level.hasColl(cx,cy+1) ) {
 					yr = 1;
 					onLand();
-					//steps = 0;
+					steps = 0;
 				}
 				if( yr<0.3 && level.hasColl(cx,cy-1) ) {
 					yr = 0.3;

@@ -1,132 +1,202 @@
 
 tiles.png
-size: 128,128
+size: 512,512
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
 backLeaves0
   rotate: false
-  xy: 33, 93
+  xy: 412, 9
   size: 30, 29
   orig: 32, 32
   offset: 1, 2
   index: -1
 backLeavesDead0
   rotate: false
-  xy: 58, 1
+  xy: 444, 9
   size: 30, 29
   orig: 32, 32
   offset: 1, 2
   index: -1
+bar
+  rotate: false
+  xy: 406, 50
+  size: 1, 4
+  orig: 1, 4
+  offset: 0, 0
+  index: -1
+barBg
+  rotate: false
+  xy: 259, 1
+  size: 118, 6
+  orig: 118, 6
+  offset: 0, 0
+  index: -1
+barBgOff
+  rotate: false
+  xy: 379, 1
+  size: 118, 6
+  orig: 118, 6
+  offset: 0, 0
+  index: -1
+barThreshold
+  rotate: false
+  xy: 406, 42
+  size: 2, 6
+  orig: 2, 6
+  offset: 0, 0
+  index: -1
+bonus0
+  rotate: false
+  xy: 406, 56
+  size: 15, 14
+  orig: 16, 16
+  offset: 0, 1
+  index: -1
 branch0
   rotate: false
-  xy: 90, 1
+  xy: 412, 40
   size: 24, 14
   orig: 32, 16
   offset: 5, 1
   index: -1
 branch1
   rotate: false
-  xy: 76, 33
+  xy: 438, 40
   size: 24, 10
   orig: 32, 16
   offset: 5, 5
   index: -1
 branchCore0
   rotate: false
-  xy: 116, 31
+  xy: 464, 40
   size: 10, 9
   orig: 16, 16
   offset: 3, 4
   index: -1
 dirt0
   rotate: false
-  xy: 58, 32
+  xy: 476, 30
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 dirtyBranch0
   rotate: false
-  xy: 90, 17
+  xy: 380, 42
   size: 24, 14
   orig: 32, 16
   offset: 5, 1
   index: -1
 dirtyBranch1
   rotate: false
-  xy: 102, 42
+  xy: 438, 52
   size: 24, 10
   orig: 32, 16
   offset: 5, 5
   index: -1
+dot
+  rotate: false
+  xy: 494, 9
+  size: 3, 3
+  orig: 3, 3
+  offset: 0, 0
+  index: -1
 empty
   rotate: false
-  xy: 33, 124
+  xy: 494, 14
   size: 3, 3
   orig: 1, 1
   offset: 0, -2
   index: -1
 fruit0
   rotate: false
-  xy: 116, 1
+  xy: 499, 1
   size: 11, 15
   orig: 16, 16
   offset: 2, 0
   index: -1
 fruitRaw0
   rotate: false
-  xy: 116, 18
+  xy: 423, 56
   size: 11, 11
   orig: 16, 16
   offset: 3, 0
   index: -1
 leaves0
   rotate: false
-  xy: 1, 60
+  xy: 316, 9
   size: 30, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 leavesBlossom0
   rotate: false
-  xy: 33, 60
+  xy: 380, 9
   size: 30, 31
   orig: 32, 32
   offset: 0, 0
   index: -1
 leavesDead0
   rotate: false
-  xy: 1, 94
+  xy: 348, 9
   size: 30, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
+radius
+  rotate: false
+  xy: 1, 1
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
 smallLeaves0
   rotate: false
-  xy: 76, 45
+  xy: 494, 40
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 smallLeavesDead0
   rotate: false
-  xy: 94, 54
+  xy: 476, 48
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 smoke0
   rotate: false
-  xy: 1, 1
+  xy: 259, 9
   size: 55, 57
   orig: 64, 64
   offset: 5, 5
   index: -1
+star
+  rotate: false
+  xy: 464, 51
+  size: 7, 3
+  orig: 7, 3
+  offset: 0, 0
+  index: -1
 stripes0
   rotate: false
-  xy: 65, 63
+  xy: 494, 58
   size: 16, 16
   orig: 16, 16
+  offset: 0, 0
+  index: -1
+surface0
+  rotate: false
+  xy: 476, 9
+  size: 16, 19
+  orig: 16, 32
+  offset: 0, 0
+  index: -1
+surface1
+  rotate: false
+  xy: 494, 19
+  size: 16, 19
+  orig: 16, 32
   offset: 0, 0
   index: -1

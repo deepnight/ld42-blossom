@@ -211,14 +211,67 @@ class Fx extends mt.Process {
 	}
 
 
-	public function warnZone(x:Float, y:Float, r:Float) {
+	public function cleanUp(x:Float, y:Float, r:Float, c:UInt) {
 		var p = allocTopAdd(getTile("radius"), x,y);
-		p.colorize(0xFF0000);
-		p.setFadeS(0.5, 0, 0.1);
+		p.colorize(c);
+		p.setFadeS(0.5, 0.1, 1);
 		p.setScale( 2*r/p.t.width );
-		p.ds = 0.01;
-		p.dsFrict = 0.8;
-		p.lifeS = 0;
+		//p.ds = 0.01;
+		//p.dsFrict = 0.8;
+		p.lifeS = 0.5;
+		p.delayS = 0.1;
+
+		var n = 20;
+		for(i in 0...n) {
+
+			var a = 6.28 * i/n;
+			var p = allocTopAdd(getTile("star"), x+Math.cos(a)*10, y+Math.sin(a)*10);
+			p.colorize(c);
+			p.moveAwayFrom(x,y, 2);
+			p.frict = 0.9;
+			p.rotation = a+1.57;
+			p.dr = 0.1;
+			p.lifeS = 0.5;
+		}
+	}
+
+
+
+	public function blossom(x:Float, y:Float, c:UInt) {
+		var n = 30;
+		for(i in 0...n) {
+			var a = 6.28 * i/n;
+			var p = allocTopAdd(getTile("dot"), x+Math.cos(a)*10, y+Math.sin(a)*10);
+			p.colorize(c);
+			p.moveAwayFrom(x,y, 1);
+			p.frict = 0.9;
+			p.lifeS = 0.5;
+		}
+	}
+
+
+
+
+	public function plant(x:Float, y:Float, c:UInt) {
+		var n = 30;
+		for(i in 0...n) {
+			var a = 6.28 * i/n;
+			var p = allocTopAdd(getTile("star"), x+Math.cos(a)*10, y+Math.sin(a)*10);
+			p.colorize(c);
+			p.moveAwayFrom(x,y, 2);
+			p.rotation = p.getMoveAng();
+			p.frict = 0.9;
+			p.lifeS = 0.5;
+		}
+		var n = 40;
+		for(i in 0...n) {
+			var a = 6.28 * i/n;
+			var p = allocTopAdd(getTile("dot"), x+Math.cos(a)*30, y+Math.sin(a)*30);
+			p.colorize(c);
+			p.moveTo(x,y, 2);
+			p.frict = 0.9;
+			p.lifeS = 0.5;
+		}
 	}
 
 

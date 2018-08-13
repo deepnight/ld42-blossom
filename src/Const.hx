@@ -16,7 +16,9 @@ class Const {
 	public static var DP_UI = _inc++;
 	public static var DP_TOP = _inc++;
 
+	public static var MAX_ENERGY = 500;
+	public static var MAX_TREE_DEPTH = 10;
 	public static var BUY = 50;
 	public static var SELL = Std.int(BUY*0.75);
-	public static var BLOSSOM = 500;
+	public static var BLOSSOM = 50;
 }

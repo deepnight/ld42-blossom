@@ -17,13 +17,16 @@ class Game extends mt.Process {
 	var clickTrap : h2d.Interactive;
 	var mask : h2d.Graphics;
 
-	public var energy : Float;
+	var energy : Float;
 
 	public var hud : h2d.Flow;
 	//public var treeRoot : en.Branch;
 	public var mouseScroll : { x:Int, y:Int, scrolling:Bool, active:Bool }
 	//public var cm : mt.deepnight.Cinematic;
 	var linkPreview : h2d.Graphics;
+	var barBg : HSprite;
+	var bar : HSprite;
+	var barThreshold : HSprite;
 
 	public function new(ctx:h2d.Sprite) {
 		super(Main.ME);
@@ -34,7 +37,8 @@ class Game extends mt.Process {
 
 		//cm = new mt.deepnight.Cinematic(Const.FPS);
 
-		scroller = new h2d.Layers(root);
+		scroller = new h2d.Layers();
+		root.add(scroller,Const.DP_BG);
 		vp = new Viewport();
 		fx = new Fx();
 
@@ -58,6 +62,12 @@ class Game extends mt.Process {
 		root.add(hud, Const.DP_UI);
 		hud.horizontalSpacing = 1;
 
+		barBg = Assets.tiles.h_get("barBg",hud);
+		bar = Assets.tiles.h_get("bar",hud);
+		hud.getProperties(bar).isAbsolute = true;
+		barThreshold = Assets.tiles.h_get("barThreshold",hud);
+		hud.getProperties(barThreshold).isAbsolute = true;
+
 		level = new Level();
 		var pt = level.getPixel(0x00FF00);
 		var e = new en.Branch(pt.cx,pt.cy);
@@ -66,9 +76,20 @@ class Game extends mt.Process {
 		for(pt in level.getPixels(0xFF0000))
 			new en.Obstacle(pt.cx, pt.cy);
 
+		var pt = level.getPixel(0x007400);
+		var e = new en.Branch(pt.cx, pt.cy); e.cd.setS("locked",Const.INFINITE);
+		var e = new en.Branch(pt.cx, pt.cy-1, e); e.cd.setS("locked",Const.INFINITE);
+		var x = new en.Branch(pt.cx-1, pt.cy-2, e); x.cd.setS("locked",Const.INFINITE);
+		var e = new en.Branch(pt.cx+1, pt.cy-2, e); e.cd.setS("locked",Const.INFINITE);
+		var e = new en.Branch(pt.cx+1, pt.cy-3, e); e.cd.setS("locked",Const.INFINITE);
+
+		for(pt in level.getPixels(0x33beff))
+			new en.Bonus(pt.cx, pt.cy);
+
 		linkPreview = new h2d.Graphics();
 		scroller.add(linkPreview, Const.DP_UI);
 
+		updateHud();
 		onResize();
 	}
 
@@ -77,18 +98,29 @@ class Game extends mt.Process {
 		if( !cd.has("invalidateHud") )
 			return;
 
-		hud.removeChildren();
+		//hud.removeChildren();
 		cd.unset("invalidateHud");
 
-		// TODO render HUD
+		bar.setPos(1,1);
+		bar.scaleX = MLib.fclamp(energy/Const.MAX_ENERGY,0,1) * (barBg.tile.width-2);
+		barBg.set(energy<=Const.BUY ? "barBgOff" : "barBg");
+		barThreshold.x = 1+Const.BUY/Const.MAX_ENERGY * (barBg.tile.width-2);
 
 		onResize();
 
 	}
 
 
-	public function useEnergy(v:Int) {
+	public function hasEnergy(v:Float) {
+		return energy>=v;
+	}
+	public function remEnergy(v:Float) {
 		energy-=v;
+		energy = MLib.fmax(0,energy);
+	}
+	public function addEnergy(v:Float) {
+		energy+=v;
+		energy = MLib.fmin(Const.MAX_ENERGY,energy);
 	}
 
 	function onMouseDown(ev:hxd.Event) {
@@ -116,7 +148,7 @@ class Game extends mt.Process {
 		if( ev.button==0 && energy>Const.BUY ) {
 			var b = getParentBranchPreview(m.cx, m.cy, m.x, m.y);
 			if( b!=null ) {
-				useEnergy(Const.BUY);
+				remEnergy(Const.BUY);
 				new en.Branch(b.fcx, b.fcy, b.to);
 			}
 		}
@@ -131,7 +163,7 @@ class Game extends mt.Process {
 				return null;
 
 		var dh = new DecisionHelper(en.Branch.ALL);
-		dh.keepOnly( function(e) return e.isAlive() && MLib.fabs(e.cx-cx)<=1 && MLib.fabs(e.cy-cy)<=1 );
+		dh.keepOnly( function(e) return !e.cd.has("locked") && e.isAlive() && MLib.fabs(e.cx-cx)<=1 && MLib.fabs(e.cy-cy)<=1 && e.getTreeDepth()<=Const.MAX_TREE_DEPTH );
 		if( dh.countRemaining()==0 )
 			return null;
 		dh.score( function(e) return -e.distPxFree(x,y)*0.1 );
@@ -155,7 +187,7 @@ class Game extends mt.Process {
 		clickTrap.width = w();
 		clickTrap.height = h();
 
-		hud.x = Std.int( w()*0.5/Const.SCALE - hud.outerWidth*0.5 );
+		hud.x = Std.int( vp.wid*0.5 - hud.outerWidth*0.5 );
 		hud.y = 4;
 
 		mask.scaleX = w();
@@ -266,5 +298,7 @@ class Game extends mt.Process {
 				i++;
 			}
 		}
+
+		updateHud();
 	}
 }

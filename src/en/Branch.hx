@@ -14,6 +14,8 @@ class Branch extends Entity {
 	var parts : Array<HSprite> = [];
 	var invalidate = true;
 	var power : Float = 0;
+	var wasPolluted = false;
+	var polluted = false;
 
 	public function new(x,y,?p:Branch) {
 		super(x,y);
@@ -46,18 +48,19 @@ class Branch extends Entity {
 	var killClicks = 0;
 	override public function onClick(bt:Int) {
 		super.onClick(bt);
-		//if( bt==1 && !isRoot() ) {
-			//killClicks++;
-			//blinkChildren(0xFF0000,true);
-			//cd.setS("recentKillClick",3);
-			//if( killClicks >= (isBranchEnd() ? 1 : 5) )
-				//kill();
-		//}
-		if( !level.hasPollution(cx,cy) && bt==1 && !isRoot() && game.energy>=Const.BLOSSOM && !blossom ) {
+		if( bt==1 && !isRoot() ) {
+			killClicks++;
+			blinkChildren(0xFF0000,true);
+			cd.setS("recentKillClick",3);
+			if( killClicks >= (isBranchEnd() ? 1 : 5) )
+				kill();
+		}
+		if( !polluted && bt==0 && !isRoot() && game.hasEnergy(Const.BLOSSOM) && !blossom ) {
+			fx.blossom(centerX, centerY, 0xFFC600);
 			new en.Fruit(this);
 			blossom = true;
 			invalidate = true;
-			game.useEnergy(Const.BLOSSOM);
+			game.remEnergy(Const.BLOSSOM);
 			//killClicks++;
 			//blinkChildren(0xFF0000,true);
 			//cd.setS("recentKillClick",3);
@@ -104,7 +107,6 @@ class Branch extends Entity {
 		parts = [];
 
 		var children = getChildren();
-		var polluted = level.hasPollution(cx,cy);
 
 		if( !isRoot() && children.length==0 ) {
 			var s = Assets.tiles.h_getRandom(polluted?"backLeavesDead":"backLeaves", leavesWrapper);
@@ -141,7 +143,7 @@ class Branch extends Entity {
 		}
 
 		if( children.length==0 ) {
-			var s = Assets.tiles.h_getRandom(polluted ? "leavesDead" : blossom ? "leavesBlossom" : "leaves", leavesWrapper);
+			var s = Assets.tiles.h_getRandom(polluted ? "leavesDead" : "leavesBlossom", leavesWrapper);
 			parts.push(s);
 			s.setCenterRatio(0.5,0.5);
 			s.rotation = rnd(0,1,true);
@@ -173,7 +175,7 @@ class Branch extends Entity {
 		leavesWrapper.scaleX = spr.scaleX * power;
 		leavesWrapper.scaleY = spr.scaleY * power;
 
-		if( level.hasPollution(cx,cy) )
+		if( polluted )
 			for(p in parts)
 				if( p.groupName=="branch" )
 					p.set("dirtyBranch",p.frame);
@@ -181,7 +183,7 @@ class Branch extends Entity {
 	}
 
 	function getThickness() {
-		return 1.0 - 0.7 * MLib.fclamp(getTreeDepth()/5, 0, 1);
+		return 1.0 - 0.85 * MLib.fclamp(getTreeDepth()/Const.MAX_TREE_DEPTH, 0, 1);
 	}
 
 	public inline function isRoot() {
@@ -198,7 +200,7 @@ class Branch extends Entity {
 		hasGravity = true;
 		hasColl = true;
 		parent = null;
-		game.energy+=Const.SELL;
+		game.addEnergy(Const.SELL);
 	}
 
 	override public function isAlive() {
@@ -211,11 +213,12 @@ class Branch extends Entity {
 		cd.setS("landed", Const.INFINITE);
 	}
 
-	var wasPolluted = false;
 	override public function update() {
 		super.update();
 
-		if( level.hasPollution(cx,cy) && !wasPolluted )
+		if( level.hasPollution(cx,cy) )
+			polluted = true;
+		if( polluted && !wasPolluted )
 			invalidate = true;
 		wasPolluted = level.hasPollution(cx,cy);
 
@@ -233,26 +236,29 @@ class Branch extends Entity {
 		}
 
 		if( isAlive() ) {
-			if( level.hasPollution(cx,cy) && power>=0.6 )
+			if( polluted && power>=0.6 )
 				power-=0.015*dt;
-			if( !level.hasPollution(cx,cy) && power<1 )
+			if( !polluted && power<1 )
 				power+=0.010*dt;
 			power = MLib.fclamp(power,0,1);
 		}
 
 		if( !cd.hasSetS("energyTick", 1) )  {
-			if( !level.hasPollution(cx,cy) && isBranchEnd() )
-				game.energy+=4*power;
+			if( !polluted && isBranchEnd() )
+				game.addEnergy(4*power);
 
-			if( !level.hasPollution(cx,cy) && !isBranchEnd() && !isRoot() )
-				game.energy-=2;
+			if( !polluted && isRoot() )
+				game.addEnergy(5*power);
+
+			if( !polluted && !isBranchEnd() && !isRoot() )
+				game.remEnergy(2);
 		}
 
 		if( !cd.has("recentKillClick") )
 			killClicks = 0;
 
-		if( isRoot() )
-			setLabel(""+pretty(game.energy));
+		//if( isRoot() )
+			//setLabel(""+@:privateAccess pretty(game.energy));
 	}
 }
 

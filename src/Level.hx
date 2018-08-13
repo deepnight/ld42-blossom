@@ -57,8 +57,14 @@ class Level extends mt.Process {
 			var x = cx*Const.GRID;
 			var y = cy*Const.GRID;
 			if( hasPixel(0xffffff, cx,cy) ) {
-				var e = Assets.tiles.h_getRandom("dirt", root);
-				e.setPos(x,y);
+				if( !hasColl(cx,cy-1) ) {
+					var e = Assets.tiles.h_getRandom("surface", root);
+					e.setPos(x,y-Const.GRID);
+				}
+				else {
+					var e = Assets.tiles.h_getRandom("dirt", root);
+					e.setPos(x,y);
+				}
 			}
 		}
 
