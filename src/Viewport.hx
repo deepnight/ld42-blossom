@@ -71,6 +71,8 @@ class Viewport extends mt.Process {
 		//x = MLib.fclamp(x,-screenWid,0);
 		game.scroller.x = Std.int( -x + wid*0.5 );
 		game.scroller.y = Std.int( -y + hei*0.5 );
+		game.level.bg.x = game.scroller.x*0.6;
+		game.level.bg.y = game.scroller.y*0.6;
 		//var prioCenter = 0;
 		//game.scroller.x = Std.int( -(x+prioCenter*level.wid*0.5*Const.GRID)/(1+prioCenter) + wid*0.5 );
 		//game.scroller.y = Std.int( -(y+prioCenter*level.hei*0.5*Const.GRID)/(1+prioCenter) + hei*0.5 );

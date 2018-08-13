@@ -17,13 +17,15 @@ class Branch extends Entity {
 	var wasPolluted = false;
 	var polluted = false;
 	var pollutedMinPower = rnd(0.1,0.6);
+	public var teint : Null<UInt>;
 
-	public function new(x,y,?p:Branch) {
+	public function new(x,y,?p:Branch, ?c:UInt) {
 		super(x,y);
 		ALL.push(this);
 		hasGravity = false;
 		hasColl = false;
 		parent = p;
+		teint = c!=null ? c : parent!=null ? parent.teint : null;
 
 		game.scroller.add(spr, Const.DP_TREE);
 		spr.setRandom("empty",Std.random);
@@ -36,8 +38,16 @@ class Branch extends Entity {
 
 		branchesWrapper = new h2d.Sprite();
 		game.scroller.add(branchesWrapper, Const.DP_TREE);
+
+		if( teint!=null )
+			spr.colorMatrix = getColorMatrix();
 	}
 
+	function getColorMatrix() {
+		if( teint==null )
+			return null;
+		return mt.deepnight.Color.getColorizeMatrixH2d(teint, 0.3);
+	}
 
 	override public function dispose() {
 		super.dispose();
@@ -120,6 +130,7 @@ class Branch extends Entity {
 			var s = Assets.tiles.h_getRandom("branch", branchesWrapper);
 			parts.push(s);
 			s.setCenterRatio(0.5,0.5);
+			s.colorMatrix = getColorMatrix();
 			var a = Math.atan2(parent.centerY-centerY, parent.centerX-centerX);
 			s.setPos(Math.cos(a)*Const.GRID*0.5, Math.sin(a)*Const.GRID*0.5);
 			s.scaleX = -distPx(parent) / Const.GRID;
@@ -130,6 +141,7 @@ class Branch extends Entity {
 		if( isRoot() ) {
 			var s = Assets.tiles.h_getRandom("branch", branchesWrapper);
 			parts.push(s);
+			s.colorMatrix = getColorMatrix();
 			s.setCenterRatio(0.5,0.5);
 			s.rotation = -1.57+rnd(0,0.2,true);
 			s.scaleX = 1;
@@ -254,7 +266,7 @@ class Branch extends Entity {
 				game.addEnergy(5*power);
 
 			if( !polluted && !isBranchEnd() && !isRoot() )
-				game.remEnergy(1);
+				game.remEnergy(1.5);
 		}
 
 		if( !cd.has("recentKillClick") )

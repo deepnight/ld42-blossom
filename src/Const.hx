@@ -7,6 +7,7 @@ class Const {
 	public static var INFINITE = 999999;
 
 	static var _inc=0;
+	public static var DP_SKY = _inc++;
 	public static var DP_BG = _inc++;
 	public static var DP_FX_BG = _inc++;
 	public static var DP_SMOKE = _inc++;

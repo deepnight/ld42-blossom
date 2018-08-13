@@ -48,7 +48,7 @@ barThreshold
   index: -1
 bonus0
   rotate: false
-  xy: 406, 56
+  xy: 437, 64
   size: 15, 14
   orig: 16, 16
   offset: 0, 1
@@ -74,9 +74,23 @@ branchCore0
   orig: 16, 16
   offset: 3, 4
   index: -1
+ceil0
+  rotate: false
+  xy: 1, 487
+  size: 16, 19
+  orig: 16, 20
+  offset: 0, 1
+  index: -1
+ceil1
+  rotate: false
+  xy: 494, 18
+  size: 16, 19
+  orig: 16, 20
+  offset: 0, 1
+  index: -1
 dirt0
   rotate: false
-  xy: 476, 30
+  xy: 494, 60
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -97,14 +111,14 @@ dirtyBranch1
   index: -1
 dot
   rotate: false
-  xy: 494, 9
+  xy: 10, 508
   size: 3, 3
   orig: 3, 3
   offset: 0, 0
   index: -1
 empty
   rotate: false
-  xy: 494, 14
+  xy: 15, 508
   size: 3, 3
   orig: 1, 1
   offset: 0, -2
@@ -118,7 +132,7 @@ fruit0
   index: -1
 fruitRaw0
   rotate: false
-  xy: 423, 56
+  xy: 424, 72
   size: 11, 11
   orig: 16, 16
   offset: 3, 0
@@ -151,16 +165,58 @@ radius
   orig: 256, 256
   offset: 0, 0
   index: -1
+skyGradient-36
+  rotate: false
+  xy: 1, 259
+  size: 16, 226
+  orig: 16, 254
+  offset: 0, 28
+  index: -1
+skyGradient
+  rotate: false
+  xy: 476, 9
+  size: 16, 32
+  orig: 16, 32
+  offset: 0, 0
+  index: -1
+skyStar0
+  rotate: false
+  xy: 424, 56
+  size: 11, 14
+  orig: 16, 16
+  offset: 3, 0
+  index: -1
+skyStar1
+  rotate: false
+  xy: 494, 9
+  size: 3, 3
+  orig: 16, 16
+  offset: 3, 5
+  index: -1
+skyStar2
+  rotate: false
+  xy: 464, 51
+  size: 6, 13
+  orig: 16, 16
+  offset: 0, 2
+  index: -1
+skyStar3
+  rotate: false
+  xy: 454, 64
+  size: 5, 5
+  orig: 16, 16
+  offset: 7, 2
+  index: -1
 smallLeaves0
   rotate: false
-  xy: 494, 40
+  xy: 472, 64
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 smallLeavesDead0
   rotate: false
-  xy: 476, 48
+  xy: 490, 78
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -174,28 +230,28 @@ smoke0
   index: -1
 star
   rotate: false
-  xy: 464, 51
+  xy: 1, 508
   size: 7, 3
   orig: 7, 3
   offset: 0, 0
   index: -1
 stripes0
   rotate: false
-  xy: 494, 58
+  xy: 406, 56
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 surface0
   rotate: false
-  xy: 476, 9
+  xy: 494, 39
   size: 16, 19
   orig: 16, 32
   offset: 0, 0
   index: -1
 surface1
   rotate: false
-  xy: 494, 19
+  xy: 476, 43
   size: 16, 19
   orig: 16, 32
   offset: 0, 0

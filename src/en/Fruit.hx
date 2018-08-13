@@ -48,7 +48,8 @@ class Fruit extends Entity {
 		super.onLand();
 		if( power>=1 && !cd.has("landed") ) {
 			fx.plant(centerX, centerY, 0xD75C28);
-			new en.Branch(cx,cy);
+			new en.Branch(cx,cy, mt.deepnight.Color.makeColorHsl(game.teintHue,0.7,0.6));
+			game.teintHue+=0.2;
 		}
 		cd.setS("landed",Const.INFINITE);
 	}
@@ -56,7 +57,7 @@ class Fruit extends Entity {
 	override public function onClick(bt:Int) {
 		super.onClick(bt);
 		if( power>=1 && !hasGravity ) {
-			dx = rnd(0.15,0.20);
+			dx = rnd(0.09,0.10);
 			dy = -0.3;
 			parent = null; // fall
 		}

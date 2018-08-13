@@ -27,6 +27,7 @@ class Game extends mt.Process {
 	var barBg : HSprite;
 	var bar : HSprite;
 	var barThreshold : HSprite;
+	public var teintHue = 0.4;
 
 	public function new(ctx:h2d.Sprite) {
 		super(Main.ME);
@@ -95,7 +96,8 @@ class Game extends mt.Process {
 		updateHud();
 		onResize();
 
-		var tf = new h2d.Text(Assets.font, scroller);
+		var tf = new h2d.Text(Assets.font);
+		scroller.add(tf,Const.DP_TREE);
 		tf.text =
 			"1- Create flowers to get energy (flowers pop at the END of any branch).\n"
 			+"2- Balance tree size and energy production.\n"
@@ -103,8 +105,9 @@ class Game extends mt.Process {
 			+"4- Right click to remove branches.\n"
 			+"5- Flee pollution.";
 		tf.textColor = 0x4D61B3;
-		tf.x = Const.GRID*7;
-		tf.y = Const.GRID*6;
+		var pt = level.getPixel(0xd02dff);
+		tf.x = Const.GRID*pt.cx;
+		tf.y = Const.GRID*pt.cy;
 	}
 
 	public function updateHud() cd.setS("invalidateHud",Const.INFINITE);
@@ -303,7 +306,7 @@ class Game extends mt.Process {
 			var all = en.Obstacle.ALL.copy();
 			Lib.shuffleArray(all,Std.random);
 			var i = 0;
-			while( i<all.length*0.5 ) {
+			while( i<all.length*0.6 ) {
 				var e = all[i];
 				if( !level.hasPollution(e.cx-1,e.cy) && !level.hasColl(e.cx-1,e.cy) ) new en.Obstacle(e.cx-1,e.cy);
 				if( !level.hasPollution(e.cx+1,e.cy) && !level.hasColl(e.cx+1,e.cy) ) new en.Obstacle(e.cx+1,e.cy);
