@@ -6,73 +6,80 @@ filter: Linear,Linear
 repeat: none
 backLeaves0
   rotate: false
-  xy: 33, 60
+  xy: 33, 93
+  size: 30, 29
+  orig: 32, 32
+  offset: 1, 2
+  index: -1
+backLeavesDead0
+  rotate: false
+  xy: 58, 1
   size: 30, 29
   orig: 32, 32
   offset: 1, 2
   index: -1
 branch0
   rotate: false
-  xy: 51, 109
+  xy: 90, 1
   size: 24, 14
   orig: 32, 16
   offset: 5, 1
   index: -1
 branch1
   rotate: false
-  xy: 103, 1
+  xy: 76, 33
   size: 24, 10
   orig: 32, 16
   offset: 5, 5
   index: -1
 branchCore0
   rotate: false
-  xy: 77, 17
+  xy: 116, 31
   size: 10, 9
   orig: 16, 16
   offset: 3, 4
   index: -1
 dirt0
   rotate: false
-  xy: 33, 91
+  xy: 58, 32
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 dirtyBranch0
   rotate: false
-  xy: 77, 1
+  xy: 90, 17
   size: 24, 14
   orig: 32, 16
   offset: 5, 1
   index: -1
 dirtyBranch1
   rotate: false
-  xy: 103, 13
+  xy: 102, 42
   size: 24, 10
   orig: 32, 16
   offset: 5, 5
   index: -1
 empty
   rotate: false
-  xy: 58, 1
+  xy: 33, 124
   size: 3, 3
   orig: 1, 1
   offset: 0, -2
   index: -1
 fruit0
   rotate: false
-  xy: 65, 1
-  size: 10, 14
+  xy: 116, 1
+  size: 11, 15
   orig: 16, 16
-  offset: 2, 1
+  offset: 2, 0
   index: -1
 fruitRaw0
   rotate: false
-  xy: 65, 17
-  size: 9, 10
+  xy: 116, 18
+  size: 11, 11
   orig: 16, 16
-  offset: 4, 1
+  offset: 3, 0
   index: -1
 leaves0
   rotate: false
@@ -83,14 +90,28 @@ leaves0
   index: -1
 leavesBlossom0
   rotate: false
-  xy: 1, 94
+  xy: 33, 60
   size: 30, 31
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+leavesDead0
+  rotate: false
+  xy: 1, 94
+  size: 30, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 smallLeaves0
   rotate: false
-  xy: 33, 109
+  xy: 76, 45
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+smallLeavesDead0
+  rotate: false
+  xy: 94, 54
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -104,7 +125,7 @@ smoke0
   index: -1
 stripes0
   rotate: false
-  xy: 51, 91
+  xy: 65, 63
   size: 16, 16
   orig: 16, 16
   offset: 0, 0

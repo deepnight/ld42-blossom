@@ -104,9 +104,10 @@ class Branch extends Entity {
 		parts = [];
 
 		var children = getChildren();
+		var polluted = level.hasPollution(cx,cy);
 
 		if( !isRoot() && children.length==0 ) {
-			var s = Assets.tiles.h_getRandom("backLeaves", leavesWrapper);
+			var s = Assets.tiles.h_getRandom(polluted?"backLeavesDead":"backLeaves", leavesWrapper);
 			parts.push(s);
 			s.setCenterRatio(0.5,0.5);
 			s.rotation = rnd(0,1,true);
@@ -133,14 +134,14 @@ class Branch extends Entity {
 		}
 
 		if( !isRoot() && children.length>0 ) {
-			var s = Assets.tiles.h_getRandom("smallLeaves", leavesWrapper);
+			var s = Assets.tiles.h_getRandom(polluted ? "smallLeavesDead" : "smallLeaves", leavesWrapper);
 			parts.push(s);
 			s.setCenterRatio(0.5,0.5);
 			s.rotation = rnd(0,1,true);
 		}
 
 		if( children.length==0 ) {
-			var s = Assets.tiles.h_getRandom(blossom ? "leavesBlossom" : "leaves", leavesWrapper);
+			var s = Assets.tiles.h_getRandom(polluted ? "leavesDead" : blossom ? "leavesBlossom" : "leaves", leavesWrapper);
 			parts.push(s);
 			s.setCenterRatio(0.5,0.5);
 			s.rotation = rnd(0,1,true);
@@ -210,8 +211,13 @@ class Branch extends Entity {
 		cd.setS("landed", Const.INFINITE);
 	}
 
+	var wasPolluted = false;
 	override public function update() {
 		super.update();
+
+		if( level.hasPollution(cx,cy) && !wasPolluted )
+			invalidate = true;
+		wasPolluted = level.hasPollution(cx,cy);
 
 		if( isAlive() && ( parent==null || !parent.isAlive() ) && !isRoot() )
 			kill();
@@ -227,9 +233,9 @@ class Branch extends Entity {
 		}
 
 		if( isAlive() ) {
-			if( level.hasPollution(cx,cy) )
+			if( level.hasPollution(cx,cy) && power>=0.6 )
 				power-=0.015*dt;
-			else if( power<1 )
+			if( !level.hasPollution(cx,cy) && power<1 )
 				power+=0.010*dt;
 			power = MLib.fclamp(power,0,1);
 		}
