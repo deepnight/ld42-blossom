@@ -1735,7 +1735,8 @@ var Entity = function(x,y) {
 	_this.centerFactorY = 0.5;
 	_this.usingFactor = true;
 	_this.isUndefined = false;
-	this.spr.set_colorAdd(this.cAdd = new h3d_Vector());
+	this.cAdd = new h3d_Vector();
+	this.spr.set_colorAdd(this.cAdd);
 };
 $hxClasses["Entity"] = Entity;
 Entity.__name__ = ["Entity"];
@@ -5002,6 +5003,7 @@ en_Branch.prototype = $extend(Entity.prototype,{
 			s9.posChanged = true;
 			s9.rotation = v6;
 		}
+		haxe_Log.trace("js",{ fileName : "Branch.hx", lineNumber : 154, className : "en.Branch", methodName : "render"});
 	}
 	,postUpdate: function() {
 		Entity.prototype.postUpdate.call(this);

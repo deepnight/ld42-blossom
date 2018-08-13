@@ -46,7 +46,8 @@ class Entity {
 		//spr = new mt.heaps.slib.HSprite(Assets.gameElements);
 		game.scroller.add(spr, Const.DP_BG);
 		spr.setCenterRatio(0.5,0.5);
-		spr.colorAdd = cAdd = new h3d.Vector();
+		cAdd = new h3d.Vector();
+		spr.colorAdd = cAdd;
 	}
 
 	public function isAlive() {

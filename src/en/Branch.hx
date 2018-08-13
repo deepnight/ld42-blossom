@@ -149,6 +149,11 @@ class Branch extends Entity {
 			s.setCenterRatio(0.5,0.5);
 			s.rotation = rnd(0,1,true);
 		}
+
+		#if !js
+		for(e in parts)
+			e.colorAdd = cAdd;
+		#end
 	}
 
 	override public function postUpdate() {
@@ -160,9 +165,6 @@ class Branch extends Entity {
 			invalidate = false;
 			render();
 		}
-
-		//for(e in parts)
-			//e.colorAdd = cAdd;
 
 		branchesWrapper.x = spr.x;
 		branchesWrapper.y = spr.y;
