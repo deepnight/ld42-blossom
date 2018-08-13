@@ -174,9 +174,9 @@ class Entity {
 			debug = null;
 		}
 
-		cAdd.r*=Math.pow(0.93,dt);
-		cAdd.g*=Math.pow(0.8,dt);
-		cAdd.b*=Math.pow(0.8,dt);
+		cAdd.r*=Math.pow(0.8,dt);
+		cAdd.g*=Math.pow(0.7,dt);
+		cAdd.b*=Math.pow(0.7,dt);
 	}
 
 	public function onClick(bt:Int) {

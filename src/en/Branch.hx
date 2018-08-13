@@ -42,10 +42,24 @@ class Branch extends Entity {
 		ALL.remove(this);
 	}
 
+	var killClicks = 0;
 	override public function onClick(bt:Int) {
 		super.onClick(bt);
-		if( bt==1 && !isRoot() )
-			kill();
+		if( bt==1 && !isRoot() ) {
+			killClicks++;
+			blinkChildren(0xFF0000,true);
+			cd.setS("recentKillClick",3);
+			if( killClicks>=6 )
+				kill();
+		}
+	}
+
+	function blinkChildren(c:UInt,shake:Bool) {
+		cAdd.setColor(c);
+		if( shake )
+			cd.setS("shaking", 1);
+		for(e in getChildren())
+			e.blinkChildren(c,shake);
 	}
 
 	public function getChildren() : Array<Branch> {
@@ -124,18 +138,25 @@ class Branch extends Entity {
 	override public function postUpdate() {
 		super.postUpdate();
 
+		var sh = cd.has("shaking") ? cd.getRatio("shaking") : 0;
+
 		if( invalidate ) {
 			invalidate = false;
 			render();
 		}
 
+		for(e in parts)
+			e.colorAdd = cAdd;
+
 		branchesWrapper.x = spr.x;
 		branchesWrapper.y = spr.y;
 		branchesWrapper.scaleX = spr.scaleX;
 		branchesWrapper.scaleY = spr.scaleY;
+		branchesWrapper.x+=rnd(0.5,1,true)*sh;
+		branchesWrapper.y+=rnd(0.5,1,true)*sh;
 
 		leavesWrapper.x = spr.x + Math.cos(game.ftime*0.020+uid*0.1)*2;
-		leavesWrapper.y = spr.y + Math.cos(game.ftime*0.011+uid*0.5)*2;
+		leavesWrapper.y = spr.y + Math.cos(game.ftime*0.011+uid*0.5)*2 + (isRoot()?-8 : 0);
 		leavesWrapper.scaleX = spr.scaleX * power;
 		leavesWrapper.scaleY = spr.scaleY * power;
 	}
@@ -191,11 +212,14 @@ class Branch extends Entity {
 		if( !cd.hasSetS("energyTick", 1) )  {
 			if( isRoot() )
 				game.energy+=2;
-			else if( isBranchEnd() )
+			if( isBranchEnd() )
 				game.energy+=2*power;
 			else
 				game.energy-=1.5;
 		}
+
+		if( !cd.has("recentKillClick") )
+			killClicks = 0;
 
 		if( isRoot() )
 			setLabel(""+pretty(game.energy));
