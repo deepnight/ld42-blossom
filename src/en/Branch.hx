@@ -53,7 +53,7 @@ class Branch extends Entity {
 			killClicks++;
 			blinkChildren(0xFF0000,true);
 			cd.setS("recentKillClick",3);
-			if( killClicks >= (isBranchEnd() ? 1 : 5) )
+			if( killClicks >= (isBranchEnd() ? 2 : 5) )
 				kill();
 		}
 		if( !polluted && bt==0 && !isRoot() && game.hasEnergy(Const.BLOSSOM) && !blossom ) {

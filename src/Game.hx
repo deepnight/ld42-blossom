@@ -97,12 +97,13 @@ class Game extends mt.Process {
 
 		var tf = new h2d.Text(Assets.font, scroller);
 		tf.text =
-			"1- Make flowers to get energy (flowers pop at the END of any branch).\n"
+			"1- Create flowers to get energy (flowers pop at the END of any branch).\n"
 			+"2- Balance tree size and energy production.\n"
 			+"3- Click on flowers to create seeds and plant new trees.\n"
 			+"4- Right click to remove branches.\n"
 			+"5- Flee pollution.";
-		tf.x = Const.GRID*12;
+		tf.textColor = 0x4D61B3;
+		tf.x = Const.GRID*7;
 		tf.y = Const.GRID*6;
 	}
 
