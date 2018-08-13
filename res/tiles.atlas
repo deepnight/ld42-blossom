@@ -1,26 +1,61 @@
 
 tiles.png
-size: 30,31
+size: 64,61
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
+backLeaves0
+  rotate: false
+  xy: 33, 1
+  size: 30, 29
+  orig: 32, 32
+  offset: 1, 2
+  index: -1
 branch0
   rotate: false
-  xy: 1, 1
-  size: 28, 11
+  xy: 1, 35
+  size: 24, 14
   orig: 32, 16
-  offset: 2, 4
+  offset: 5, 1
+  index: -1
+branch1
+  rotate: false
+  xy: 33, 32
+  size: 24, 10
+  orig: 32, 16
+  offset: 5, 5
   index: -1
 branchCore0
   rotate: false
-  xy: 19, 14
+  xy: 1, 51
   size: 10, 9
   orig: 16, 16
   offset: 3, 4
   index: -1
 dirt0
   rotate: false
-  xy: 1, 14
+  xy: 27, 44
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+empty
+  rotate: false
+  xy: 13, 51
+  size: 3, 3
+  orig: 1, 1
+  offset: 0, -2
+  index: -1
+leaves0
+  rotate: false
+  xy: 1, 1
+  size: 30, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+smallLeaves0
+  rotate: false
+  xy: 45, 44
   size: 16, 16
   orig: 16, 16
   offset: 0, 0

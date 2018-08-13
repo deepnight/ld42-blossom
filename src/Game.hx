@@ -17,6 +17,8 @@ class Game extends mt.Process {
 	var clickTrap : h2d.Interactive;
 	var mask : h2d.Graphics;
 
+	public var energy : Float;
+
 	public var hud : h2d.Flow;
 	public var treeRoot : en.Branch;
 	//public var cm : mt.deepnight.Cinematic;
@@ -42,6 +44,7 @@ class Game extends mt.Process {
 		mask.visible = false;
 		mask.beginFill(0x0,1);
 		mask.drawRect(0,0, 1, 1);
+		energy = 100;
 
 		hud = new h2d.Flow();
 		root.add(hud, Const.DP_UI);
@@ -78,12 +81,15 @@ class Game extends mt.Process {
 				e.onClick(ev.button);
 			}
 
-		if( none && ev.button==0 ) {
+		if( none && ev.button==0 && energy>50 ) {
 			var dh = new DecisionHelper(en.Branch.ALL);
 			dh.keepOnly( function(e) return e.isAlive() && MLib.fabs(e.cx-m.cx)<=1 && MLib.fabs(e.cy-m.cy)<=1 );
-			dh.score( function(e) return -e.distPxFree(m.x,m.y) );
+			dh.score( function(e) return -e.distPxFree(m.x,m.y)*0.1 );
+			dh.score( function(e) return -e.getTreeDepth()*2);
+			dh.score( function(e) return e.isBranchEnd() ? -3 : 0);
 			var best = dh.getBest();
 			if( best!=null ) {
+				energy-=50;
 				new en.Branch(m.cx, m.cy, best);
 			}
 		}

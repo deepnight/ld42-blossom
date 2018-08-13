@@ -8,8 +8,11 @@ class Branch extends Entity {
 	public static var ALL : Array<Branch> = [];
 
 	public var parent : Branch;
+	var branchesWrapper : h2d.Sprite;
+	var leavesWrapper : h2d.Sprite;
 	var parts : Array<HSprite> = [];
 	var invalidate = true;
+	var power : Float = 0;
 
 	public function new(x,y,?p:Branch) {
 		super(x,y);
@@ -19,15 +22,23 @@ class Branch extends Entity {
 		parent = p;
 
 		game.scroller.add(spr, Const.DP_TREE);
-		spr.setRandom("branchCore",Std.random);
+		spr.setRandom("empty",Std.random);
 		spr.setCenterRatio(0.5, 0.5);
 		if( parent!=null )
 			parent.invalidate = true;
+
+		leavesWrapper = new h2d.Sprite();
+		game.scroller.add(leavesWrapper, Const.DP_BG);
+
+		branchesWrapper = new h2d.Sprite();
+		game.scroller.add(branchesWrapper, Const.DP_TREE);
 	}
 
 
 	override public function dispose() {
 		super.dispose();
+		leavesWrapper.remove();
+		branchesWrapper.remove();
 		ALL.remove(this);
 	}
 
@@ -45,53 +56,107 @@ class Branch extends Entity {
 		return children;
 	}
 
+	public function isBranchEnd() : Bool {
+		for(e in ALL)
+			if( e.parent==this )
+				return false;
+		return true;
+	}
+
+	public function getTreeDepth() {
+		var d = 0;
+		var b = parent;
+		while( b!=null ) {
+			d++;
+			b = b.parent;
+		}
+		return d;
+	}
+
+	function render() {
+		for( e in parts ) e.remove();
+		parts = [];
+
+		var children = getChildren();
+
+		if( !isRoot() && children.length==0 ) {
+			var s = Assets.tiles.h_getRandom("backLeaves", leavesWrapper);
+			parts.push(s);
+			s.setCenterRatio(0.5,0.5);
+			s.rotation = rnd(0,1,true);
+		}
+
+		if( parent!=null ) {
+			var s = Assets.tiles.h_getRandom("branch", branchesWrapper);
+			parts.push(s);
+			s.setCenterRatio(0.5,0.5);
+			var a = Math.atan2(parent.centerY-centerY, parent.centerX-centerX);
+			s.setPos(Math.cos(a)*Const.GRID*0.5, Math.sin(a)*Const.GRID*0.5);
+			s.scaleX = -distPx(parent) / Const.GRID;
+			s.scaleY = 1.6*getThickness();
+			s.rotation = a;
+		}
+
+		if( isRoot() ) {
+			var s = Assets.tiles.h_getRandom("branch", branchesWrapper);
+			parts.push(s);
+			s.setCenterRatio(0.5,0.5);
+			s.rotation = -1.57+rnd(0,0.2,true);
+			s.scaleX = 1;
+			s.scaleY = 1.4*getThickness();
+		}
+
+		if( !isRoot() && children.length>0 ) {
+			var s = Assets.tiles.h_getRandom("smallLeaves", leavesWrapper);
+			parts.push(s);
+			s.setCenterRatio(0.5,0.5);
+			s.rotation = rnd(0,1,true);
+		}
+
+		if( children.length==0 ) {
+			var s = Assets.tiles.h_getRandom("leaves", leavesWrapper);
+			parts.push(s);
+			s.setCenterRatio(0.5,0.5);
+			s.rotation = rnd(0,1,true);
+		}
+	}
+
 	override public function postUpdate() {
 		super.postUpdate();
 
 		if( invalidate ) {
 			invalidate = false;
-			for( e in parts )
-				e.remove();
-			parts = [];
-
-			if( parent!=null ) {
-				var s = Assets.tiles.h_getRandom("branch", spr);
-				parts.push(s);
-				s.setCenterRatio(0.5,0.5);
-				var a = Math.atan2(parent.centerY-centerY, parent.centerX-centerX);
-				s.setPos(Math.cos(a)*Const.GRID*0.5, Math.sin(a)*Const.GRID*0.5);
-				s.rotation = a + rnd(0,0.2,true);
-			}
-
-			if( isRoot() ) {
-				var s = Assets.tiles.h_getRandom("branch", spr);
-				parts.push(s);
-				s.setCenterRatio(0.5,0.5);
-				s.rotation = -1.57+rnd(0,0.2,true);
-			}
-
-			var children = getChildren();
-			if( children.length==0 ) {
-				var s = Assets.tiles.h_getRandom("branch", spr);
-				parts.push(s);
-				s.setCenterRatio(0.5,0.5);
-				s.scaleX = rnd(0.3,0.5);
-				s.scaleY = rnd(0.4,0.6);
-				s.y = -5;
-				s.rotation = -1.57+rnd(0.2,0.5,true);
-			}
+			render();
 		}
+
+		branchesWrapper.x = spr.x;
+		branchesWrapper.y = spr.y;
+		branchesWrapper.scaleX = spr.scaleX;
+		branchesWrapper.scaleY = spr.scaleY;
+
+		leavesWrapper.x = spr.x + Math.cos(game.ftime*0.020+uid*0.1)*2;
+		leavesWrapper.y = spr.y + Math.cos(game.ftime*0.011+uid*0.5)*2;
+		leavesWrapper.scaleX = spr.scaleX * power;
+		leavesWrapper.scaleY = spr.scaleY * power;
+	}
+
+	function getThickness() {
+		return 1.0 - 0.7 * MLib.fclamp(getTreeDepth()/5, 0, 1);
 	}
 
 	public inline function isRoot() return this==game.treeRoot;
 
 	public function kill() {
+		if( parent!=null ) {
+			parent.power*=0.5;
+			parent.invalidate = true;
+		}
 		dx = rnd(0,0.1,true);
 		dy = -rnd(0.1,0.3);
 		hasGravity = true;
 		hasColl = true;
 		parent = null;
-		spr.rotation = 0;
+		game.energy+=25;
 	}
 
 	override public function isAlive() {
@@ -101,7 +166,6 @@ class Branch extends Entity {
 	override function onLand() {
 		super.onLand();
 		dy *= -1;
-		spr.rotation*=0.7;
 		cd.setS("landed", Const.INFINITE);
 	}
 
@@ -111,8 +175,8 @@ class Branch extends Entity {
 		if( isAlive() && ( parent==null || !parent.isAlive() ) && !isRoot() )
 			kill();
 
-		if( hasGravity && !cd.has("landed") )
-			spr.rotation*=Math.pow(0.96,dt);
+		//if( hasGravity && !cd.has("landed") )
+			//spr.rotation*=Math.pow(0.96,dt);
 
 		if( hasGravity && cd.has("landed") ) {
 			sprScaleX*=Math.pow(0.99,dt);
@@ -120,6 +184,21 @@ class Branch extends Entity {
 			if( sprScaleX<=0.03 )
 				destroy();
 		}
+
+		if( isAlive() && power<1 )
+			power+=0.003*dt;
+
+		if( !cd.hasSetS("energyTick", 1) )  {
+			if( isRoot() )
+				game.energy+=2;
+			else if( isBranchEnd() )
+				game.energy+=2*power;
+			else
+				game.energy-=1.5;
+		}
+
+		if( isRoot() )
+			setLabel(""+pretty(game.energy));
 	}
 }
 

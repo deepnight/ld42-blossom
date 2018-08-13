@@ -20,7 +20,7 @@ class Main extends mt.Process {
 	override public function onResize() {
 		super.onResize();
 
-		Const.SCALE = MLib.floor( w() / (20*Const.GRID) );
+		Const.SCALE = MLib.floor( w() / (30*Const.GRID) );
 		cached.scaleX = cached.scaleY = Const.SCALE;
 
 		cached.width = MLib.ceil(Boot.ME.s2d.width/cached.scaleX);
