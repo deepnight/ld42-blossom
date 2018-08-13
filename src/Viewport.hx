@@ -2,6 +2,7 @@ import mt.deepnight.Lib;
 import mt.MLib;
 
 class Viewport extends mt.Process {
+	public static var PARALAX = 0.4;
 	var game(get,never) : Game; inline function get_game() return Game.ME;
 	var level(get,never) : Level; inline function get_level() return Game.ME.level;
 
@@ -72,7 +73,7 @@ class Viewport extends mt.Process {
 		y = MLib.fclamp(y,hei*0.5,level.hei*Const.GRID-hei*0.5);
 		game.scroller.x = Std.int( -x + wid*0.5 );
 		game.scroller.y = Std.int( -y + hei*0.5 );
-		game.level.bg.x = game.scroller.x*0.4;
-		game.level.bg.y = game.scroller.y*0.4;
+		game.level.bg.x = game.scroller.x*PARALAX;
+		game.level.bg.y = game.scroller.y*PARALAX;
 	}
 }
