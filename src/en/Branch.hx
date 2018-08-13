@@ -16,6 +16,7 @@ class Branch extends Entity {
 	var power : Float = 0;
 	var wasPolluted = false;
 	var polluted = false;
+	var pollutedMinPower = rnd(0.1,0.6);
 
 	public function new(x,y,?p:Branch) {
 		super(x,y);
@@ -200,7 +201,8 @@ class Branch extends Entity {
 		hasGravity = true;
 		hasColl = true;
 		parent = null;
-		game.addEnergy(Const.SELL);
+		if( !polluted )
+			game.addEnergy(Const.SELL);
 	}
 
 	override public function isAlive() {
@@ -220,7 +222,7 @@ class Branch extends Entity {
 			polluted = true;
 		if( polluted && !wasPolluted )
 			invalidate = true;
-		wasPolluted = level.hasPollution(cx,cy);
+		wasPolluted = polluted;
 
 		if( isAlive() && ( parent==null || !parent.isAlive() ) && !isRoot() )
 			kill();
@@ -236,7 +238,7 @@ class Branch extends Entity {
 		}
 
 		if( isAlive() ) {
-			if( polluted && power>=0.6 )
+			if( polluted && power>=pollutedMinPower )
 				power-=0.015*dt;
 			if( !polluted && power<1 )
 				power+=0.010*dt;

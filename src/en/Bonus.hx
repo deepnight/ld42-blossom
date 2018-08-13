@@ -56,7 +56,7 @@ class Bonus extends Entity {
 
 		if( !cd.hasSetS("check",0.15) ) {
 			for(e in en.Branch.ALL)
-				if( !level.hasPollution(e.cx,e.cy) && distCase(e)<=3 ) {
+				if( /*!level.hasPollution(e.cx,e.cy) &&*/ distCase(e)<=3 ) {
 					pickUp();
 					break;
 				}
