@@ -23,6 +23,7 @@ class Game extends mt.Process {
 	//public var treeRoot : en.Branch;
 	public var mouseScroll : { x:Int, y:Int, scrolling:Bool, active:Bool }
 	//public var cm : mt.deepnight.Cinematic;
+	var linkPreview : h2d.Graphics;
 
 	public function new(ctx:h2d.Sprite) {
 		super(Main.ME);
@@ -64,6 +65,9 @@ class Game extends mt.Process {
 
 		for(pt in level.getPixels(0xFF0000))
 			new en.Obstacle(pt.cx, pt.cy);
+
+		linkPreview = new h2d.Graphics();
+		scroller.add(linkPreview, Const.DP_UI);
 
 		onResize();
 	}
@@ -109,17 +113,39 @@ class Game extends mt.Process {
 				e.onClick(ev.button);
 			}
 
-		if( none && ev.button==0 && energy>Const.BUY ) {
-			var dh = new DecisionHelper(en.Branch.ALL);
-			dh.keepOnly( function(e) return e.isAlive() && MLib.fabs(e.cx-m.cx)<=1 && MLib.fabs(e.cy-m.cy)<=1 );
-			dh.score( function(e) return -e.distPxFree(m.x,m.y)*0.1 );
-			dh.score( function(e) return -e.getTreeDepth()*2);
-			dh.score( function(e) return e.isBranchEnd() ? -5 : 0);
-			var best = dh.getBest();
-			if( best!=null ) {
-				energy-=Const.BUY;
-				new en.Branch(m.cx, m.cy, best);
+		if( ev.button==0 && energy>Const.BUY ) {
+			var b = getParentBranchPreview(m.cx, m.cy, m.x, m.y);
+			if( b!=null ) {
+				useEnergy(Const.BUY);
+				new en.Branch(b.fcx, b.fcy, b.to);
 			}
+		}
+	}
+
+	function getParentBranchPreview(cx:Int,cy:Int, x:Float, y:Float) : Null<{ fcx:Int, fcy:Int, to:en.Branch }> {
+		if( level.hasColl(cx,cy) )
+			return null;
+
+		for(e in en.Branch.ALL)
+			if( e.cx==cx && e.cy==cy )
+				return null;
+
+		var dh = new DecisionHelper(en.Branch.ALL);
+		dh.keepOnly( function(e) return e.isAlive() && MLib.fabs(e.cx-cx)<=1 && MLib.fabs(e.cy-cy)<=1 );
+		if( dh.countRemaining()==0 )
+			return null;
+		dh.score( function(e) return -e.distPxFree(x,y)*0.1 );
+		dh.score( function(e) return -e.getTreeDepth()*2);
+		dh.score( function(e) return e.isBranchEnd() ? -5 : 0);
+		var e = dh.getBest();
+		if( e==null )
+			return null;
+
+		var a = Math.atan2(cy-e.cy, cx-e.cx);
+		return {
+			fcx : e.cx+MLib.round(Math.cos(a)*1),
+			fcy : e.cy+MLib.round(Math.sin(a)*1),
+			to : e,
 		}
 	}
 
@@ -195,8 +221,8 @@ class Game extends mt.Process {
 
 		super.update();
 
+		var m = getMouse();
 		if( mouseScroll.active ) {
-			var m = getMouse();
 			if( !mouseScroll.scrolling && Lib.distance(m.x,m.y, mouseScroll.x,mouseScroll.y)>=5 )
 				mouseScroll.scrolling = true;
 
@@ -216,7 +242,18 @@ class Game extends mt.Process {
 		if( Key.isPressed(hxd.Key.ESCAPE) ) {
 		}
 
-		if( !cd.hasSetS("expand", 3) ) {
+		var b = getParentBranchPreview(m.cx,m.cy,m.x,m.y);
+		if( b!=null ) {
+			linkPreview.visible = true;
+			linkPreview.clear();
+			linkPreview.lineStyle(2, 0xFFC600, 1);
+			linkPreview.moveTo((b.fcx+0.5)*Const.GRID, (b.fcy+0.5)*Const.GRID);
+			linkPreview.lineTo(b.to.centerX, b.to.centerY);
+		}
+		else
+			linkPreview.visible = false;
+
+		if( !cd.hasSetS("expand", 6) ) {
 			var all = en.Obstacle.ALL.copy();
 			Lib.shuffleArray(all,Std.random);
 			var i = 0;

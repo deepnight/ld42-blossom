@@ -16,8 +16,9 @@ class Level extends mt.Process {
 	public function new() {
 		super(Game.ME);
 
-		wid = 48;
-		hei = 48;
+		var bd = hxd.Res.level.toBitmap();
+		wid = bd.width;
+		hei = bd.height;
 		collMap = new haxe.ds.Vector(wid*hei);
 		pollMap = new haxe.ds.Vector(wid*hei);
 
@@ -30,7 +31,6 @@ class Level extends mt.Process {
 		//mask.beginFill(0x2B2F68,1);
 		//mask.drawRect(0,0,wid*Const.GRID,hei*Const.GRID);
 
-		var bd = hxd.Res.level.toBitmap();
 		pixels = new Map();
 		for(cy in 0...hei)
 		for(cx in 0...wid) {
