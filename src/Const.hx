@@ -18,4 +18,5 @@ class Const {
 
 	public static var BUY = 50;
 	public static var SELL = Std.int(BUY*0.75);
+	public static var BLOSSOM = 500;
 }

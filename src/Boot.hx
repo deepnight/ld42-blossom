@@ -1,5 +1,10 @@
+import mt.MLib;
+import hxd.Key;
+
 class Boot extends hxd.App {
 	public static var ME : Boot;
+
+	var speed = 1.;
 
 	// Boot
 	static function main() {
@@ -24,7 +29,25 @@ class Boot extends hxd.App {
 
 	override function update(dt:Float) {
 		super.update(dt);
-		mt.Process.updateAll(dt);
+
+		#if debug
+		if( !Console.ME.isActive() ) {
+			if( Key.isPressed(Key.NUMPAD_SUB) )
+				speed = speed==1 ? 0.35 : speed==0.35 ? 0.1 : 1;
+
+			if( Key.isPressed(Key.P) )
+				speed = speed==0 ? 1 : 0;
+
+			if( Key.isDown(Key.NUMPAD_ADD) )
+				speed = 5;
+			else if( speed>1 )
+				speed = 1;
+		}
+		#end
+
+		mt.heaps.slib.SpriteLib.DT = dt*speed;
+		if( speed>0 )
+			mt.Process.updateAll(dt*speed);
 	}
 }
 

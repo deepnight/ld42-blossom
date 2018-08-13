@@ -16,7 +16,7 @@ class Obstacle extends Entity {
 		game.scroller.add(spr, Const.DP_SMOKE);
 		spr.setRandom("stripes",Std.random);
 		spr.setCenterRatio(0.5, 0.5);
-		spr.alpha = 0.15;
+		spr.alpha = 0;
 		spr.colorize(0xFF0000);
 
 		game.level.setPollution(cx,cy,true);
@@ -39,16 +39,12 @@ class Obstacle extends Entity {
 		}
 		//else if( !cd.hasSetS("fx",2) )
 			//fx.largeSmoke(centerX,centerY,0x992828);
+
+		spr.alpha += (0.15-spr.alpha)*0.03;
 	}
 
 	override public function update() {
 		super.update();
-		if( !cd.hasSetS("expand",Const.INFINITE) ) {
-			if( !level.hasPollution(cx-1,cy) && !level.hasColl(cx-1,cy) ) new en.Obstacle(cx-1,cy);
-			if( !level.hasPollution(cx+1,cy) && !level.hasColl(cx+1,cy) ) new en.Obstacle(cx+1,cy);
-			if( !level.hasPollution(cx,cy-1) && !level.hasColl(cx,cy-1) ) new en.Obstacle(cx,cy-1);
-			if( !level.hasPollution(cx,cy+1) && !level.hasColl(cx,cy+1) ) new en.Obstacle(cx,cy+1);
-		}
 	}
 }
 

@@ -10,6 +10,7 @@ class Branch extends Entity {
 	public var parent : Branch;
 	var branchesWrapper : h2d.Sprite;
 	var leavesWrapper : h2d.Sprite;
+	var blossom = false;
 	var parts : Array<HSprite> = [];
 	var invalidate = true;
 	var power : Float = 0;
@@ -45,12 +46,23 @@ class Branch extends Entity {
 	var killClicks = 0;
 	override public function onClick(bt:Int) {
 		super.onClick(bt);
-		if( bt==1 && !isRoot() ) {
-			killClicks++;
-			blinkChildren(0xFF0000,true);
-			cd.setS("recentKillClick",3);
-			if( killClicks >= (isBranchEnd() ? 1 : 5) )
-				kill();
+		//if( bt==1 && !isRoot() ) {
+			//killClicks++;
+			//blinkChildren(0xFF0000,true);
+			//cd.setS("recentKillClick",3);
+			//if( killClicks >= (isBranchEnd() ? 1 : 5) )
+				//kill();
+		//}
+		if( !level.hasPollution(cx,cy) && bt==1 && !isRoot() && game.energy>=Const.BLOSSOM && !blossom ) {
+			new en.Fruit(this);
+			blossom = true;
+			invalidate = true;
+			game.useEnergy(Const.BLOSSOM);
+			//killClicks++;
+			//blinkChildren(0xFF0000,true);
+			//cd.setS("recentKillClick",3);
+			//if( killClicks >= (isBranchEnd() ? 1 : 5) )
+				//kill();
 		}
 	}
 
@@ -128,7 +140,7 @@ class Branch extends Entity {
 		}
 
 		if( children.length==0 ) {
-			var s = Assets.tiles.h_getRandom("leaves", leavesWrapper);
+			var s = Assets.tiles.h_getRandom(blossom ? "leavesBlossom" : "leaves", leavesWrapper);
 			parts.push(s);
 			s.setCenterRatio(0.5,0.5);
 			s.rotation = rnd(0,1,true);
@@ -171,7 +183,9 @@ class Branch extends Entity {
 		return 1.0 - 0.7 * MLib.fclamp(getTreeDepth()/5, 0, 1);
 	}
 
-	public inline function isRoot() return this==game.treeRoot;
+	public inline function isRoot() {
+		return parent==null && !hasGravity;
+	}
 
 	public function kill() {
 		if( parent!=null ) {
@@ -221,17 +235,11 @@ class Branch extends Entity {
 		}
 
 		if( !cd.hasSetS("energyTick", 1) )  {
-			//if( isRoot() )
-				//game.energy+=2;
-			if( !level.hasPollution(cx,cy) )
-				if( isBranchEnd() )
-					game.energy+=4*power;
-				else
-					game.energy+=1.5*power;
-			//else if( level.hasPollution(cx,cy) )
-				//game.energy-=1.5;
-			//else
-				//game.energy-=0.5;
+			if( !level.hasPollution(cx,cy) && isBranchEnd() )
+				game.energy+=4*power;
+
+			if( !level.hasPollution(cx,cy) && !isBranchEnd() && !isRoot() )
+				game.energy-=2;
 		}
 
 		if( !cd.has("recentKillClick") )

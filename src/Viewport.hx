@@ -29,9 +29,9 @@ class Viewport extends mt.Process {
 		return MLib.ceil( Boot.ME.s2d.height / Const.SCALE );
 	}
 
-	public function repos() {
-		x = game.treeRoot.centerX;
-		y = game.treeRoot.centerY;
+	public function repos(e:Entity) {
+		x = e.centerX;
+		y = e.centerY-Const.GRID*3;
 	}
 
 	override public function update() {

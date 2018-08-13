@@ -20,7 +20,7 @@ class Game extends mt.Process {
 	public var energy : Float;
 
 	public var hud : h2d.Flow;
-	public var treeRoot : en.Branch;
+	//public var treeRoot : en.Branch;
 	public var mouseScroll : { x:Int, y:Int, scrolling:Bool, active:Bool }
 	//public var cm : mt.deepnight.Cinematic;
 
@@ -59,8 +59,8 @@ class Game extends mt.Process {
 
 		level = new Level();
 		var pt = level.getPixel(0x00FF00);
-		treeRoot = new en.Branch(pt.cx,pt.cy);
-		vp.repos();
+		var e = new en.Branch(pt.cx,pt.cy);
+		vp.repos(e);
 
 		for(pt in level.getPixels(0xFF0000))
 			new en.Obstacle(pt.cx, pt.cy);
@@ -80,6 +80,11 @@ class Game extends mt.Process {
 
 		onResize();
 
+	}
+
+
+	public function useEnergy(v:Int) {
+		energy-=v;
 	}
 
 	function onMouseDown(ev:hxd.Event) {
@@ -192,10 +197,8 @@ class Game extends mt.Process {
 
 		if( mouseScroll.active ) {
 			var m = getMouse();
-			if( !mouseScroll.scrolling && Lib.distance(m.x,m.y, mouseScroll.x,mouseScroll.y)>=5 ) {
-				trace("active");
+			if( !mouseScroll.scrolling && Lib.distance(m.x,m.y, mouseScroll.x,mouseScroll.y)>=5 )
 				mouseScroll.scrolling = true;
-			}
 
 			if( mouseScroll.scrolling ) {
 				mouseScroll.scrolling = true;
@@ -211,6 +214,20 @@ class Game extends mt.Process {
 		gc();
 
 		if( Key.isPressed(hxd.Key.ESCAPE) ) {
+		}
+
+		if( !cd.hasSetS("expand", 3) ) {
+			var all = en.Obstacle.ALL.copy();
+			Lib.shuffleArray(all,Std.random);
+			var i = 0;
+			while( i<all.length*0.5 ) {
+				var e = all[i];
+				if( !level.hasPollution(e.cx-1,e.cy) && !level.hasColl(e.cx-1,e.cy) ) new en.Obstacle(e.cx-1,e.cy);
+				if( !level.hasPollution(e.cx+1,e.cy) && !level.hasColl(e.cx+1,e.cy) ) new en.Obstacle(e.cx+1,e.cy);
+				if( !level.hasPollution(e.cx,e.cy-1) && !level.hasColl(e.cx,e.cy-1) ) new en.Obstacle(e.cx,e.cy-1);
+				if( !level.hasPollution(e.cx,e.cy+1) && !level.hasColl(e.cx,e.cy+1) ) new en.Obstacle(e.cx,e.cy+1);
+				i++;
+			}
 		}
 	}
 }

@@ -1,6 +1,6 @@
 
 tiles.png
-size: 64,138
+size: 128,128
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
@@ -13,42 +13,42 @@ backLeaves0
   index: -1
 branch0
   rotate: false
-  xy: 1, 94
+  xy: 51, 109
   size: 24, 14
   orig: 32, 16
   offset: 5, 1
   index: -1
 branch1
   rotate: false
-  xy: 1, 126
+  xy: 103, 1
   size: 24, 10
   orig: 32, 16
   offset: 5, 5
   index: -1
 branchCore0
   rotate: false
-  xy: 45, 121
+  xy: 77, 17
   size: 10, 9
   orig: 16, 16
   offset: 3, 4
   index: -1
 dirt0
   rotate: false
-  xy: 27, 103
+  xy: 33, 91
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 dirtyBranch0
   rotate: false
-  xy: 1, 110
+  xy: 77, 1
   size: 24, 14
   orig: 32, 16
   offset: 5, 1
   index: -1
 dirtyBranch1
   rotate: false
-  xy: 33, 91
+  xy: 103, 13
   size: 24, 10
   orig: 32, 16
   offset: 5, 5
@@ -60,6 +60,20 @@ empty
   orig: 1, 1
   offset: 0, -2
   index: -1
+fruit0
+  rotate: false
+  xy: 65, 1
+  size: 10, 14
+  orig: 16, 16
+  offset: 2, 1
+  index: -1
+fruitRaw0
+  rotate: false
+  xy: 65, 17
+  size: 9, 10
+  orig: 16, 16
+  offset: 4, 1
+  index: -1
 leaves0
   rotate: false
   xy: 1, 60
@@ -67,9 +81,16 @@ leaves0
   orig: 32, 32
   offset: 0, 0
   index: -1
+leavesBlossom0
+  rotate: false
+  xy: 1, 94
+  size: 30, 31
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
 smallLeaves0
   rotate: false
-  xy: 27, 121
+  xy: 33, 109
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -83,7 +104,7 @@ smoke0
   index: -1
 stripes0
   rotate: false
-  xy: 45, 103
+  xy: 51, 91
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
