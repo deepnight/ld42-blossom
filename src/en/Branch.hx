@@ -16,7 +16,7 @@ class Branch extends Entity {
 	var power : Float = 0;
 	var wasPolluted = false;
 	var polluted = false;
-	var pollutedMinPower = rnd(0.1,0.6);
+	var pollutedMinPower : Float;
 	public var teint : Null<UInt>;
 
 	public function new(x,y,?p:Branch, ?c:UInt) {
@@ -26,6 +26,7 @@ class Branch extends Entity {
 		hasColl = false;
 		parent = p;
 		teint = c!=null ? c : parent!=null ? parent.teint : null;
+		pollutedMinPower = rnd(0.1,0.6);
 
 		game.scroller.add(spr, Const.DP_TREE);
 		spr.setRandom("empty",Std.random);
