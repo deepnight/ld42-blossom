@@ -200,6 +200,9 @@
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
             <key type="filename">export/backLeaves0.png</key>
+            <key type="filename">export/backLeavesDead0.png</key>
+            <key type="filename">export/leavesBlossom0.png</key>
+            <key type="filename">export/leavesDead0.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -209,6 +212,68 @@
                 <rect>8,8,16,16</rect>
                 <key>scale9Paddings</key>
                 <rect>8,8,16,16</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">export/bar.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>0,1,1,2</rect>
+                <key>scale9Paddings</key>
+                <rect>0,1,1,2</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">export/barBg.png</key>
+            <key type="filename">export/barBgOff.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>30,2,59,3</rect>
+                <key>scale9Paddings</key>
+                <rect>30,2,59,3</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">export/barThreshold.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>1,2,1,3</rect>
+                <key>scale9Paddings</key>
+                <rect>1,2,1,3</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">export/bonus0.png</key>
+            <key type="filename">export/branchCore0.png</key>
+            <key type="filename">export/dirt0.png</key>
+            <key type="filename">export/fruit0.png</key>
+            <key type="filename">export/fruitRaw0.png</key>
+            <key type="filename">export/leaves0.png</key>
+            <key type="filename">export/smallLeaves0.png</key>
+            <key type="filename">export/smallLeavesDead0.png</key>
+            <key type="filename">export/stripes0.png</key>
+            <key type="filename">export/surface0.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>4,4,8,8</rect>
+                <key>scale9Paddings</key>
+                <rect>4,4,8,8</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -228,21 +293,16 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">export/branchCore0.png</key>
-            <key type="filename">export/dirt0.png</key>
-            <key type="filename">export/fruit0.png</key>
-            <key type="filename">export/leaves0.png</key>
-            <key type="filename">export/smallLeaves0.png</key>
-            <key type="filename">export/stripes0.png</key>
+            <key type="filename">export/dot.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>4,4,8,8</rect>
+                <rect>1,1,2,2</rect>
                 <key>scale9Paddings</key>
-                <rect>4,4,8,8</rect>
+                <rect>1,1,2,2</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -259,6 +319,19 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">export/radius.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>64,64,128,128</rect>
+                <key>scale9Paddings</key>
+                <rect>64,64,128,128</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">export/smoke0.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -269,6 +342,32 @@
                 <rect>16,16,32,32</rect>
                 <key>scale9Paddings</key>
                 <rect>16,16,32,32</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">export/star.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>2,1,4,2</rect>
+                <key>scale9Paddings</key>
+                <rect>2,1,4,2</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">export/surface1.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>4,8,8,16</rect>
+                <key>scale9Paddings</key>
+                <rect>4,8,8,16</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
