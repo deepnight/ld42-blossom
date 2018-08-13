@@ -14,8 +14,19 @@ class Main extends mt.Process {
 		new Console();
 		cached = new h2d.CachedBitmap(root, 1,1);
 		cached.blendMode = None;
-		new Game( new h2d.Sprite(cached) );
-		onResize();
+		startGame();
+	}
+
+	public function startGame() {
+		if( Game.ME!=null )
+			Game.ME.destroy();
+		createChildProcess(function(p) {
+			if( Game.ME==null ) {
+				new Game( new h2d.Sprite(cached) );
+				onResize();
+				p.destroy();
+			}
+		});
 	}
 
 	override public function onResize() {

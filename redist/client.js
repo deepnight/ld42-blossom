@@ -4545,7 +4545,7 @@ en_Bonus.prototype = $extend(Entity.prototype,{
 	}
 	,__class__: en_Bonus
 });
-var en_Branch = function(x,y,p) {
+var en_Branch = function(x,y,p,c) {
 	this.killClicks = 0;
 	this.polluted = false;
 	this.wasPolluted = false;
@@ -4558,6 +4558,7 @@ var en_Branch = function(x,y,p) {
 	this.hasGravity = false;
 	this.hasColl = false;
 	this.parent = p;
+	this.teint = c != null ? c : this.parent != null ? this.parent.teint : null;
 	this.pollutedMinPower = null ? (0.1 + Math.random() * 0.5) * (Std.random(2) * 2 - 1) : 0.1 + Math.random() * 0.5;
 	Game.ME.scroller.addChildAt(this.spr,Const.DP_TREE);
 	var _this = this.spr;
@@ -4626,12 +4627,33 @@ var en_Branch = function(x,y,p) {
 	Game.ME.scroller.addChildAt(this.leavesWrapper,Const.DP_BG);
 	this.branchesWrapper = new h2d_Sprite();
 	Game.ME.scroller.addChildAt(this.branchesWrapper,Const.DP_TREE);
+	if(this.teint != null) {
+		this.spr.set_colorMatrix(this.getColorMatrix());
+	}
 };
 $hxClasses["en.Branch"] = en_Branch;
 en_Branch.__name__ = ["en","Branch"];
 en_Branch.__super__ = Entity;
 en_Branch.prototype = $extend(Entity.prototype,{
-	dispose: function() {
+	getColorMatrix: function() {
+		if(this.teint == null) {
+			return null;
+		}
+		var col = this.teint;
+		var ratioOldColor = null;
+		if(ratioOldColor == null) {
+			ratioOldColor = 0.7;
+		}
+		var rgb_r = col >> 16;
+		var rgb_g = col >> 8 & 255;
+		var rgb_b = col & 255;
+		var r = 0.3 * rgb_r / 255;
+		var g = 0.3 * rgb_g / 255;
+		var b = 0.3 * rgb_b / 255;
+		var m = [ratioOldColor + r,g,b,0,r,ratioOldColor + g,b,0,r,g,ratioOldColor + b,0,0,0,0,1];
+		return h3d_Matrix.L(m);
+	}
+	,dispose: function() {
 		Entity.prototype.dispose.call(this);
 		var _this = this.leavesWrapper;
 		if(_this != null && _this.parent != null) {
@@ -4843,6 +4865,7 @@ en_Branch.prototype = $extend(Entity.prototype,{
 			_this11.centerFactorY = 0.5;
 			_this11.usingFactor = true;
 			_this11.isUndefined = false;
+			s3.set_colorMatrix(this.getColorMatrix());
 			var _this12 = this.parent;
 			var _this13 = this.parent;
 			var a = Math.atan2((_this12.cy + _this12.yr) * Const.GRID - (this.cy + this.yr) * Const.GRID,(_this13.cx + _this13.xr) * Const.GRID - (this.cx + this.xr) * Const.GRID);
@@ -4892,6 +4915,7 @@ en_Branch.prototype = $extend(Entity.prototype,{
 			_this18.isUndefined = false;
 			var s5 = s4;
 			this.parts.push(s5);
+			s5.set_colorMatrix(this.getColorMatrix());
 			var _this19 = s5.pivot;
 			_this19.centerFactorX = 0.5;
 			_this19.centerFactorY = 0.5;
@@ -5010,6 +5034,13 @@ en_Branch.prototype = $extend(Entity.prototype,{
 			this.invalidate = false;
 			this.render();
 		}
+		var _g = 0;
+		var _g1 = this.parts;
+		while(_g < _g1.length) {
+			var e = _g1[_g];
+			++_g;
+			e.set_colorAdd(this.cAdd);
+		}
 		var _this = this.branchesWrapper;
 		_this.posChanged = true;
 		_this.x = this.spr.x;
@@ -5022,14 +5053,14 @@ en_Branch.prototype = $extend(Entity.prototype,{
 		var _this3 = this.branchesWrapper;
 		_this3.posChanged = true;
 		_this3.scaleY = this.spr.scaleY;
-		var _g = this.branchesWrapper;
-		var v = _g.x + (0.5 + Math.random() * 0.5) * (Std.random(2) * 2 - 1) * sh;
-		_g.posChanged = true;
-		_g.x = v;
-		var _g1 = this.branchesWrapper;
-		var v1 = _g1.y + (0.5 + Math.random() * 0.5) * (Std.random(2) * 2 - 1) * sh;
-		_g1.posChanged = true;
-		_g1.y = v1;
+		var _g2 = this.branchesWrapper;
+		var v = _g2.x + (0.5 + Math.random() * 0.5) * (Std.random(2) * 2 - 1) * sh;
+		_g2.posChanged = true;
+		_g2.x = v;
+		var _g3 = this.branchesWrapper;
+		var v1 = _g3.y + (0.5 + Math.random() * 0.5) * (Std.random(2) * 2 - 1) * sh;
+		_g3.posChanged = true;
+		_g3.y = v1;
 		var _this4 = this.leavesWrapper;
 		var v2 = this.spr.x + Math.cos(Game.ME.ftime * 0.020 + this.uid * 0.1) * 2;
 		_this4.posChanged = true;
@@ -5045,11 +5076,11 @@ en_Branch.prototype = $extend(Entity.prototype,{
 		_this7.posChanged = true;
 		_this7.scaleY = this.spr.scaleY * this.power;
 		if(this.polluted) {
-			var _g2 = 0;
+			var _g4 = 0;
 			var _g11 = this.parts;
-			while(_g2 < _g11.length) {
-				var p = _g11[_g2];
-				++_g2;
+			while(_g4 < _g11.length) {
+				var p = _g11[_g4];
+				++_g4;
 				if(p.groupName == "branch") {
 					var frame = p.frame;
 					if("dirtyBranch" != p.groupName) {
@@ -6957,6 +6988,20 @@ h2d_Drawable.prototype = $extend(h2d_Sprite.prototype,{
 			s.color__ = c;
 		}
 		return c;
+	}
+	,set_colorMatrix: function(m) {
+		var s = this.getShader(h3d_shader_ColorMatrix);
+		if(s == null) {
+			if(m != null) {
+				s = this.addShader(new h3d_shader_ColorMatrix());
+				s.matrix__ = m;
+			}
+		} else if(m == null) {
+			this.removeShader(s);
+		} else {
+			s.matrix__ = m;
+		}
+		return m;
 	}
 	,getShader: function(stype) {
 		if(this.shaders != null) {
@@ -13754,6 +13799,11 @@ var h3d_Matrix = function() {
 };
 $hxClasses["h3d.Matrix"] = h3d_Matrix;
 h3d_Matrix.__name__ = ["h3d","Matrix"];
+h3d_Matrix.L = function(a) {
+	var m = new h3d_Matrix();
+	m.loadValues(a);
+	return m;
+};
 h3d_Matrix.prototype = {
 	zero: function() {
 		this._11 = 0.0;

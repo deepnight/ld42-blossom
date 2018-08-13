@@ -74,6 +74,7 @@ class Game extends mt.Process {
 		var e = new en.Branch(pt.cx,pt.cy);
 		vp.repos(e);
 		var e = new en.Branch(pt.cx,pt.cy-1,e);
+		new en.Branch(pt.cx+1,pt.cy-1,e);
 		new en.Branch(pt.cx+1,pt.cy-2,e);
 		new en.Branch(pt.cx-1,pt.cy-2,e);
 
@@ -217,9 +218,9 @@ class Game extends mt.Process {
 		mask.remove();
 		clickTrap.remove();
 
-		//for(e in Entity.ALL)
-			//e.destroy();
-		//gc();
+		for(e in Entity.ALL)
+			e.destroy();
+		gc();
 
 		if( ME==this )
 			ME = null;
@@ -289,7 +290,15 @@ class Game extends mt.Process {
 		gc();
 
 		if( Key.isPressed(hxd.Key.R) ) {
+			Main.ME.startGame();
 		}
+
+		#if debug
+		if( Key.isPressed(hxd.Key.K) ) {
+			for(e in en.Obstacle.ALL)
+				e.destroy();
+		}
+		#end
 
 		var b = getParentBranchPreview(m.cx,m.cy,m.x,m.y);
 		if( b!=null ) {
