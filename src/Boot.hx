@@ -27,9 +27,10 @@ class Boot extends hxd.App {
 		mt.Process.resizeAll();
 	}
 
-	override function update(oldDt:Float) {
+	override function update(deltaTime:Float) {
+		super.update(deltaTime);
+
 		var tmod = hxd.Timer.tmod;
-		super.update(tmod);
 
 		#if debug
 		if( !Console.ME.isActive() ) {
