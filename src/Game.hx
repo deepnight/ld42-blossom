@@ -133,10 +133,14 @@ class Game extends mt.Process {
 		return energy>=v;
 	}
 	public function remEnergy(v:Float) {
+		if( Math.isNaN(v) )
+			throw "illegal rem v="+v;
 		energy-=v;
 		energy = MLib.fmax(0,energy);
 	}
 	public function addEnergy(v:Float) {
+		if( Math.isNaN(v) )
+			throw "illegal add v="+v;
 		energy+=v;
 		energy = MLib.fmin(Const.MAX_ENERGY,energy);
 	}

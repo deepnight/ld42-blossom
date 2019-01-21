@@ -49,7 +49,9 @@ class Fruit extends Entity {
 		if( power>=1 && !cd.has("landed") ) {
 			fx.plant(centerX, centerY, 0xD75C28);
 			//#if js
-			new en.Branch(cx,cy);
+			Game.ME.delayer.addS( function() {
+				new en.Branch(cx,cy);
+			}, 0.1);
 			//#else
 			//new en.Branch(cx,cy, mt.deepnight.Color.makeColorHsl(game.teintHue,0.7,0.6));
 			//#end
