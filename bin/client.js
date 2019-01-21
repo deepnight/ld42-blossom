@@ -210,9 +210,9 @@ Boot.prototype = $extend(hxd_App.prototype,{
 		hxd_App.prototype.onResize.call(this);
 		mt_Process.resizeAll();
 	}
-	,update: function(oldDt) {
+	,update: function(deltaTime) {
+		hxd_App.prototype.update.call(this,deltaTime);
 		var tmod = hxd_Timer.dt * hxd_Timer.wantedFPS;
-		hxd_App.prototype.update.call(this,tmod);
 		mt_heaps_slib_SpriteLib.DT = tmod * this.speed;
 		if(this.speed > 0) {
 			mt_Process.updateAll(tmod * this.speed);
@@ -3171,10 +3171,16 @@ Game.prototype = $extend(mt_Process.prototype,{
 		return this.energy >= v;
 	}
 	,remEnergy: function(v) {
+		if(isNaN(v)) {
+			throw new js__$Boot_HaxeError("illegal rem v=" + v);
+		}
 		var y = this.energy -= v;
 		this.energy = 0 > y ? 0 : y;
 	}
 	,addEnergy: function(v) {
+		if(isNaN(v)) {
+			throw new js__$Boot_HaxeError("illegal add v=" + v);
+		}
 		this.energy += v;
 		var x = Const.MAX_ENERGY;
 		var y = this.energy;
@@ -5469,10 +5475,13 @@ en_Fruit.prototype = $extend(Entity.prototype,{
 		}
 	}
 	,onLand: function() {
+		var _gthis = this;
 		Entity.prototype.onLand.call(this);
 		if(this.power >= 1 && !this.cd.fastCheck.h.hasOwnProperty(37748736)) {
 			Game.ME.fx.plant((this.cx + this.xr) * Const.GRID,(this.cy + this.yr) * Const.GRID,14113832);
-			new en_Branch(this.cx,this.cy);
+			Game.ME.delayer.addS(null,function() {
+				new en_Branch(_gthis.cx,_gthis.cy);
+			},0.1);
 			Game.ME.teintHue += 0.2;
 		}
 		var _this = this.cd;
@@ -39165,6 +39174,19 @@ mt_Delayer.__name__ = "mt.Delayer";
 mt_Delayer.prototype = {
 	destroy: function() {
 		this.delays = null;
+	}
+	,cmp: function(a,b) {
+		if(a.t < b.t) {
+			return -1;
+		} else if(a.t > b.t) {
+			return 1;
+		} else {
+			return 0;
+		}
+	}
+	,addS: function(id,cb,sec) {
+		this.delays.push(new mt__$Delayer_Task(id,this.now + sec * this.fps,cb));
+		haxe_ds_ArraySort.sort(this.delays,$bind(this,this.cmp));
 	}
 	,update: function(dt) {
 		while(this.delays.length > 0 && this.delays[0].t <= this.now) {
