@@ -8,8 +8,8 @@ class Branch extends Entity {
 	public static var ALL : Array<Branch> = [];
 
 	public var parent : Branch;
-	var branchesWrapper : h2d.Sprite;
-	var leavesWrapper : h2d.Sprite;
+	var branchesWrapper : h2d.Object;
+	var leavesWrapper : h2d.Object;
 	var blossom = false;
 	var parts : Array<HSprite> = [];
 	var invalidate = true;
@@ -32,10 +32,10 @@ class Branch extends Entity {
 		if( parent!=null )
 			parent.invalidate = true;
 
-		leavesWrapper = new h2d.Sprite();
+		leavesWrapper = new h2d.Object();
 		game.scroller.add(leavesWrapper, Const.DP_BG);
 
-		branchesWrapper = new h2d.Sprite();
+		branchesWrapper = new h2d.Object();
 		game.scroller.add(branchesWrapper, Const.DP_TREE);
 	}
 
@@ -121,7 +121,7 @@ class Branch extends Entity {
 			parts.push(s);
 			s.setCenterRatio(0.5,0.5);
 			var a = Math.atan2(parent.centerY-centerY, parent.centerX-centerX);
-			s.setPos(Math.cos(a)*Const.GRID*0.5, Math.sin(a)*Const.GRID*0.5);
+			s.setPosition(Math.cos(a)*Const.GRID*0.5, Math.sin(a)*Const.GRID*0.5);
 			s.scaleX = -distPx(parent) / Const.GRID;
 			s.scaleY = 1.6*getThickness();
 			s.rotation = a;

@@ -153,14 +153,14 @@ class Entity {
 		spr.scaleY = sprScaleY;
 
 		if( label!=null )
-			label.setPos( Std.int(centerX-label.textWidth*0.5), Std.int(centerY-label.textHeight-Const.GRID*0.5));
+			label.setPosition( Std.int(centerX-label.textWidth*0.5), Std.int(centerY-label.textHeight-Const.GRID*0.5));
 
 		if( Console.ME.has("bounds") ) {
 			if( debug==null ) {
 				debug = new h2d.Graphics();
 				game.scroller.add(debug, Const.DP_UI);
 			}
-			debug.setPos(centerX, centerY);
+			debug.setPosition(centerX, centerY);
 			debug.clear();
 
 			debug.beginFill(0xE8DDB3,0.2);

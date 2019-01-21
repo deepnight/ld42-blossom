@@ -7,7 +7,7 @@ import mt.heaps.slib.*;
 class Level extends mt.Process {
 	public var wid : Int;
 	public var hei : Int;
-	public var bg : h2d.Sprite;
+	public var bg : h2d.Object;
 	var collMap : haxe.ds.Vector<Bool>;
 	public var pollMap : haxe.ds.Vector<Bool>;
 
@@ -25,7 +25,7 @@ class Level extends mt.Process {
 
 		createRootInLayers(Game.ME.scroller, Const.DP_BG);
 
-		bg = new h2d.Sprite();
+		bg = new h2d.Object();
 		Game.ME.root.add(bg, Const.DP_SKY);
 		//var mask = new h2d.Bitmap(h2d.Tile.fromColor(0x1D2045,1,1), bg);
 		//mask.scaleX = wid*Const.GRID;
@@ -68,15 +68,15 @@ class Level extends mt.Process {
 			if( hasColl(cx,cy) ) {
 				if( !hasColl(cx,cy-1) ) {
 					var e = Assets.tiles.h_getRandom("surface", root);
-					e.setPos(x,y-Const.GRID);
+					e.setPosition(x,y-Const.GRID);
 				}
 				else if( !hasColl(cx,cy+1) ) {
 					var e = Assets.tiles.h_getRandom("ceil", root);
-					e.setPos(x,y);
+					e.setPosition(x,y);
 				}
 				else {
 					var e = Assets.tiles.h_getRandom("dirt", root);
-					e.setPos(x,y);
+					e.setPosition(x,y);
 				}
 			}
 			else {

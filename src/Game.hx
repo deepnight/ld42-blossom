@@ -29,7 +29,7 @@ class Game extends mt.Process {
 	var barThreshold : HSprite;
 	public var teintHue = 0.4;
 
-	public function new(ctx:h2d.Sprite) {
+	public function new(ctx:h2d.Object) {
 		super(Main.ME);
 
 		ME = this;
@@ -246,8 +246,8 @@ class Game extends mt.Process {
 	}
 
 	public function getMouse() {
-		var gx = hxd.Stage.getInstance().mouseX;
-		var gy = hxd.Stage.getInstance().mouseY;
+		var gx = hxd.Window.getInstance().mouseX;
+		var gy = hxd.Window.getInstance().mouseY;
 		var x = Std.int( gx/Const.SCALE-scroller.x );
 		var y = Std.int( gy/Const.SCALE-scroller.y );
 		return {

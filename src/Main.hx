@@ -4,16 +4,14 @@ import mt.MLib;
 class Main extends mt.Process {
 	public static var ME : Main;
 
-	public var cached : h2d.CachedBitmap;
-
 	public function new() {
 		super();
 		ME = this;
 		createRoot(Boot.ME.s2d);
+        root.filter = new h2d.filter.ColorMatrix(); // force rendering for pixel perfect
+
 		Assets.init();
 		new Console();
-		cached = new h2d.CachedBitmap(root, 1,1);
-		cached.blendMode = None;
 		startGame();
 	}
 
@@ -22,7 +20,7 @@ class Main extends mt.Process {
 			Game.ME.destroy();
 		createChildProcess(function(p) {
 			if( Game.ME==null ) {
-				new Game( new h2d.Sprite(cached) );
+				new Game( new h2d.Object(root) );
 				onResize();
 				p.destroy();
 			}
@@ -33,10 +31,10 @@ class Main extends mt.Process {
 		super.onResize();
 
 		Const.SCALE = MLib.floor( w() / (30*Const.GRID) );
-		cached.scaleX = cached.scaleY = Const.SCALE;
+		root.scaleX = root.scaleY = Const.SCALE;
 
-		cached.width = MLib.ceil(Boot.ME.s2d.width/cached.scaleX);
-		cached.height = MLib.ceil(Boot.ME.s2d.height/cached.scaleY);
+		// cached.width = MLib.ceil(Boot.ME.s2d.width/cached.scaleX);
+		// cached.height = MLib.ceil(Boot.ME.s2d.height/cached.scaleY);
 	}
 
 	override public function update() {

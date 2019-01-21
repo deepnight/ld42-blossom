@@ -27,8 +27,9 @@ class Boot extends hxd.App {
 		mt.Process.resizeAll();
 	}
 
-	override function update(dt:Float) {
-		super.update(dt);
+	override function update(oldDt:Float) {
+		var tmod = hxd.Timer.tmod;
+		super.update(tmod);
 
 		#if debug
 		if( !Console.ME.isActive() ) {
@@ -45,9 +46,9 @@ class Boot extends hxd.App {
 		}
 		#end
 
-		mt.heaps.slib.SpriteLib.DT = dt*speed;
+		mt.heaps.slib.SpriteLib.DT = tmod*speed;
 		if( speed>0 )
-			mt.Process.updateAll(dt*speed);
+			mt.Process.updateAll(tmod*speed);
 	}
 }
 
