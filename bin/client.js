@@ -213,7 +213,7 @@ Boot.prototype = $extend(hxd_App.prototype,{
 	,update: function(deltaTime) {
 		hxd_App.prototype.update.call(this,deltaTime);
 		var tmod = hxd_Timer.dt * hxd_Timer.wantedFPS;
-		mt_heaps_slib_SpriteLib.DT = tmod * this.speed;
+		mt_heaps_slib_SpriteLib.TMOD = tmod * this.speed;
 		if(this.speed > 0) {
 			mt_Process.updateAll(tmod * this.speed);
 		}
@@ -1864,9 +1864,8 @@ Entity.prototype = {
 			}
 		}
 	}
-	,preUpdate: function(dt) {
-		this.dt = dt;
-		this.cd.update(dt);
+	,preUpdate: function() {
+		this.cd.update(Game.ME.tmod);
 	}
 	,postUpdate: function() {
 		var _this = this.spr;
@@ -1913,9 +1912,9 @@ Entity.prototype = {
 			}
 			this.debug = null;
 		}
-		this.cAdd.x *= Math.pow(0.8,this.dt);
-		this.cAdd.y *= Math.pow(0.7,this.dt);
-		this.cAdd.z *= Math.pow(0.7,this.dt);
+		this.cAdd.x *= Math.pow(0.8,Game.ME.tmod);
+		this.cAdd.y *= Math.pow(0.7,Game.ME.tmod);
+		this.cAdd.z *= Math.pow(0.7,Game.ME.tmod);
 	}
 	,onClick: function(bt) {
 	}
@@ -1926,7 +1925,7 @@ Entity.prototype = {
 	,onTouchCeiling: function() {
 	}
 	,update: function() {
-		var x = this.dx * this.dt;
+		var x = this.dx * Game.ME.tmod;
 		var x1 = x < 0 ? -x : x;
 		var steps;
 		if(x1 > .0) {
@@ -1938,7 +1937,7 @@ Entity.prototype = {
 		} else {
 			steps = 0;
 		}
-		var step = this.dx * this.dt / steps;
+		var step = this.dx * Game.ME.tmod / steps;
 		while(steps > 0) {
 			this.xr += step;
 			if(this.hasColl) {
@@ -1963,11 +1962,11 @@ Entity.prototype = {
 			}
 			--steps;
 		}
-		this.dx *= Math.pow(this.frict,this.dt);
+		this.dx *= Math.pow(this.frict,Game.ME.tmod);
 		if(!(Game.ME.level.hasColl(this.cx,this.cy + 1) && this.yr >= 0.5 && this.dy == 0) && this.hasGravity) {
-			this.dy += this.gravity * this.dt;
+			this.dy += this.gravity * Game.ME.tmod;
 		}
-		var x2 = this.dy * this.dt;
+		var x2 = this.dy * Game.ME.tmod;
 		var x3 = x2 < 0 ? -x2 : x2;
 		var steps1;
 		if(x3 > .0) {
@@ -1979,7 +1978,7 @@ Entity.prototype = {
 		} else {
 			steps1 = 0;
 		}
-		var step1 = this.dy * this.dt / steps1;
+		var step1 = this.dy * Game.ME.tmod / steps1;
 		while(steps1 > 0) {
 			this.yr += step1;
 			if(this.hasColl) {
@@ -2004,7 +2003,7 @@ Entity.prototype = {
 			}
 			--steps1;
 		}
-		this.dy *= Math.pow(this.frict,this.dt);
+		this.dy *= Math.pow(this.frict,Game.ME.tmod);
 	}
 	,__class__: Entity
 };
@@ -2018,7 +2017,7 @@ var mt_Process = function(parent) {
 };
 $hxClasses["mt.Process"] = mt_Process;
 mt_Process.__name__ = "mt.Process";
-mt_Process.updateAll = function(dt,rendering) {
+mt_Process.updateAll = function(tmod,rendering) {
 	if(rendering == null) {
 		rendering = true;
 	}
@@ -2027,7 +2026,7 @@ mt_Process.updateAll = function(dt,rendering) {
 	while(_g < _g1.length) {
 		var p = _g1[_g];
 		++_g;
-		mt_Process._update(p,dt,rendering);
+		mt_Process._update(p,tmod,rendering);
 	}
 	var _g2 = 0;
 	var _g3 = mt_Process.ROOTS;
@@ -2099,20 +2098,20 @@ mt_Process._resize = function(p) {
 		}
 	}
 };
-mt_Process._update = function(p,dt,rendering) {
+mt_Process._update = function(p,tmod,rendering) {
 	if(rendering == null) {
 		rendering = true;
 	}
 	if(p.paused || p.destroyed) {
 		return;
 	}
-	dt *= p.speedMod;
+	tmod *= p.speedMod;
 	p.rendering = rendering;
-	p.dt = dt;
-	p.ftime += dt;
-	p.delayer.update(dt);
-	p.cd.update(dt);
-	p.tw.update(dt);
+	p.tmod = tmod;
+	p.ftime += tmod;
+	p.delayer.update(tmod);
+	p.cd.update(tmod);
+	p.tw.update(tmod);
 	if(!p.paused && !p.destroyed) {
 		p.update();
 		if(p.onUpdateCb != null) {
@@ -2125,7 +2124,7 @@ mt_Process._update = function(p,dt,rendering) {
 		while(_g < _g1.length) {
 			var p1 = _g1[_g];
 			++_g;
-			mt_Process._update(p1,dt,rendering);
+			mt_Process._update(p1,tmod,rendering);
 		}
 	}
 };
@@ -2198,7 +2197,7 @@ mt_Process.prototype = {
 		this.paused = false;
 		this.destroyed = false;
 		this.ftime = 0;
-		this.dt = 1;
+		this.tmod = 1;
 		this.speedMod = 1.0;
 		this.delayer = new mt_Delayer(this.getDefaultFrameRate());
 		this.cd = new mt_Cooldown(this.getDefaultFrameRate());
@@ -2736,7 +2735,7 @@ Fx.prototype = $extend(mt_Process.prototype,{
 	}
 	,update: function() {
 		mt_Process.prototype.update.call(this);
-		this.pool.update(Game.ME.dt);
+		this.pool.update(Game.ME.tmod);
 	}
 	,__class__: Fx
 });
@@ -3361,7 +3360,7 @@ Game.prototype = $extend(mt_Process.prototype,{
 			var e = _g1[_g];
 			++_g;
 			if(!e.destroyed) {
-				e.preUpdate(this.dt);
+				e.preUpdate();
 			}
 		}
 		var _g2 = 0;
@@ -5209,18 +5208,18 @@ en_Branch.prototype = $extend(Entity.prototype,{
 			this.kill();
 		}
 		if(this.hasGravity && this.cd.fastCheck.h.hasOwnProperty(37748736)) {
-			this.sprScaleX *= Math.pow(0.99,this.dt);
-			this.sprScaleY *= Math.pow(0.99,this.dt);
+			this.sprScaleX *= Math.pow(0.99,Game.ME.tmod);
+			this.sprScaleY *= Math.pow(0.99,Game.ME.tmod);
 			if(this.sprScaleX <= 0.03) {
 				this.destroyed = true;
 			}
 		}
 		if(this.isAlive()) {
 			if(this.polluted && this.power >= this.pollutedMinPower) {
-				this.power -= 0.015 * this.dt;
+				this.power -= 0.015 * Game.ME.tmod;
 			}
 			if(!this.polluted && this.power < 1) {
-				this.power += 0.010 * this.dt;
+				this.power += 0.010 * Game.ME.tmod;
 			}
 			var x = this.power;
 			this.power = x < 0 ? 0 : x > 1 ? 1 : x;
@@ -5464,15 +5463,15 @@ en_Fruit.prototype = $extend(Entity.prototype,{
 			this.parent = null;
 		}
 		if(this.hasGravity && this.cd.fastCheck.h.hasOwnProperty(37748736)) {
-			this.sprScaleX *= Math.pow(0.99,this.dt);
-			this.sprScaleY *= Math.pow(0.97,this.dt);
+			this.sprScaleX *= Math.pow(0.99,Game.ME.tmod);
+			this.sprScaleY *= Math.pow(0.97,Game.ME.tmod);
 			if(this.sprScaleX <= 0.03) {
 				this.destroyed = true;
 			}
 		}
 		if(this.isAlive()) {
 			if(!Game.ME.level.hasPollution(this.cx,this.cy) && this.power > 0) {
-				this.power += 0.006 * this.dt;
+				this.power += 0.006 * Game.ME.tmod;
 			}
 			var x = this.power;
 			this.power = x < 0 ? 0 : x > 1 ? 1 : x;
@@ -40537,7 +40536,7 @@ mt_heaps_slib_HSprite.prototype = $extend(h2d_Drawable.prototype,{
 				}
 			}
 			var _this = this._animManager;
-			var dt = !isNaN(mt_heaps_slib_SpriteLib.DT) ? mt_heaps_slib_SpriteLib.DT : ctx.elapsedTime * hxd_Timer.wantedFPS;
+			var dt = !isNaN(mt_heaps_slib_SpriteLib.TMOD) ? mt_heaps_slib_SpriteLib.TMOD : ctx.elapsedTime * hxd_Timer.wantedFPS;
 			if(_this.needUpdates) {
 				_this._update(dt);
 			}
@@ -41326,7 +41325,7 @@ hxsl_Printer.SWIZ = ["x","y","z","w"];
 hxsl_RuntimeShader.UID = 0;
 hxsl_SharedShader.UNROLL_LOOPS = false;
 mt_Cooldown.__meta__ = { obj : { indexes : ["locked","expand","invalidateHud","check","fx","emitterLife","emitterTick","shaking","recentKillClick","landed","energyTick"]}};
-mt_heaps_slib_SpriteLib.DT = NaN;
+mt_heaps_slib_SpriteLib.TMOD = NaN;
 mt_heaps_slib_assets_Atlas.CACHE_ANIMS = [];
 {
 	Boot.main();
