@@ -13,6 +13,7 @@ class Main extends mt.Process {
 		Assets.init();
 		new Console();
 		startGame();
+		new mt.deepnight.GameFocusHelper(root, Assets.font);
 	}
 
 	public function startGame() {

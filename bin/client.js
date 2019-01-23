@@ -2240,6 +2240,12 @@ mt_Process.prototype = {
 	,getDefaultFrameRate: function() {
 		return hxd_Timer.wantedFPS;
 	}
+	,pause: function() {
+		this.paused = true;
+	}
+	,resume: function() {
+		this.paused = false;
+	}
 	,addChild: function(p) {
 		if(p.parent == null) {
 			HxOverrides.remove(mt_Process.ROOTS,p);
@@ -3847,6 +3853,7 @@ var Main = function() {
 	Assets.init();
 	new Console();
 	this.startGame();
+	new mt_deepnight_GameFocusHelper(this.root,Assets.font);
 };
 $hxClasses["Main"] = Main;
 Main.__name__ = "Main";
@@ -10563,6 +10570,32 @@ h2d_Layers.prototype = $extend(h2d_Object.prototype,{
 				}
 				if(this.parentContainer != null) {
 					this.parentContainer.contentChanged(this);
+				}
+				break;
+			}
+		}
+	}
+	,over: function(s) {
+		var _g = 0;
+		var _g1 = this.children.length;
+		while(_g < _g1) {
+			var i = _g++;
+			if(this.children[i] == s) {
+				var _g2 = 0;
+				var _g11 = this.layersIndexes;
+				while(_g2 < _g11.length) {
+					var l = _g11[_g2];
+					++_g2;
+					if(l > i) {
+						var _g3 = i;
+						var _g12 = l - 1;
+						while(_g3 < _g12) {
+							var p = _g3++;
+							this.children[p] = this.children[p + 1];
+						}
+						this.children[l - 1] = s;
+						break;
+					}
 				}
 				break;
 			}
@@ -27213,6 +27246,9 @@ hxd_Window.prototype = {
 		this.event(new hxd_Event(b ? hxd_EventKind.EFocus : hxd_EventKind.EFocusLost));
 		this.focused = b;
 	}
+	,get_isFocused: function() {
+		return this.focused;
+	}
 	,__class__: hxd_Window
 };
 var hxd_System = function() { };
@@ -39132,6 +39168,123 @@ mt_Delayer.prototype = {
 	}
 	,__class__: mt_Delayer
 };
+var mt_deepnight_GameFocusHelper = function(p,font) {
+	this.firstClick = false;
+	this.suspended = false;
+	mt_Process.call(this);
+	this.font = font;
+	this.parentLayers = p;
+	this.createRoot(p);
+	this.root.set_visible(false);
+	this.firstClick = true;
+	this.suspendGame();
+};
+$hxClasses["mt.deepnight.GameFocusHelper"] = mt_deepnight_GameFocusHelper;
+mt_deepnight_GameFocusHelper.__name__ = "mt.deepnight.GameFocusHelper";
+mt_deepnight_GameFocusHelper.__super__ = mt_Process;
+mt_deepnight_GameFocusHelper.prototype = $extend(mt_Process.prototype,{
+	suspendGame: function() {
+		var _gthis = this;
+		this.suspended = true;
+		this.parentLayers.over(this.root);
+		this.root.set_visible(true);
+		this.root.removeChildren();
+		var i = new h2d_Interactive(1,1,this.root);
+		i.backgroundColor = this.firstClick ? (255 | 0) << 24 | 2436675 : (229.5 | 0) << 24 | 0;
+		i.onClick = function(_) {
+			_gthis.resumeGame();
+		};
+		var tf = new h2d_Text(this.font,this.root);
+		var _g = tf;
+		_g.posChanged = true;
+		_g.scaleX *= 3;
+		var _g1 = tf;
+		_g1.posChanged = true;
+		_g1.scaleY *= 3;
+		if(this.firstClick) {
+			tf.set_text("Click anywhere to start");
+		} else {
+			tf.set_text("PAUSED - click anywhere to resume");
+		}
+		var _g2 = 0;
+		var _g11 = mt_Process.ROOTS;
+		while(_g2 < _g11.length) {
+			var p = _g11[_g2];
+			++_g2;
+			if(p != this) {
+				p.pause();
+			}
+		}
+		this.createChildProcess(function(c) {
+			var v = (mt_Process.CUSTOM_STAGE_WIDTH > 0 ? mt_Process.CUSTOM_STAGE_WIDTH : hxd_Window.getInstance().get_width()) * 0.5 - tf.get_textWidth() * tf.scaleX * 0.5;
+			tf.posChanged = true;
+			tf.x = v;
+			var v1 = (mt_Process.CUSTOM_STAGE_HEIGHT > 0 ? mt_Process.CUSTOM_STAGE_HEIGHT : hxd_Window.getInstance().get_height()) * 0.5 - tf.get_textHeight() * tf.scaleY * 0.5;
+			tf.posChanged = true;
+			tf.y = v1;
+			var tmp = mt_Process.CUSTOM_STAGE_WIDTH > 0 ? mt_Process.CUSTOM_STAGE_WIDTH : hxd_Window.getInstance().get_width();
+			i.width = tmp;
+			var tmp1 = mt_Process.CUSTOM_STAGE_HEIGHT > 0 ? mt_Process.CUSTOM_STAGE_HEIGHT : hxd_Window.getInstance().get_height();
+			i.height = tmp1;
+			if(!_gthis.suspended) {
+				c.destroyed = true;
+			}
+		});
+		this.firstClick = false;
+	}
+	,resumeGame: function() {
+		this.suspended = false;
+		this.root.set_visible(false);
+		this.root.removeChildren();
+		var _g = 0;
+		var _g1 = mt_Process.ROOTS;
+		while(_g < _g1.length) {
+			var p = _g1[_g];
+			++_g;
+			if(p != this) {
+				p.resume();
+			}
+		}
+	}
+	,update: function() {
+		mt_Process.prototype.update.call(this);
+		var _this = this.cd;
+		var frames = 0.2 * this.cd.baseFps;
+		var tmp;
+		if(_this.fastCheck.h.hasOwnProperty(12582912)) {
+			tmp = true;
+		} else {
+			var frames1 = frames;
+			frames1 = Math.floor(frames1 * 1000) / 1000;
+			var cur = _this._getCdObject(12582912);
+			if(!(cur != null && frames1 < cur.frames && false)) {
+				if(frames1 <= 0) {
+					if(cur != null) {
+						HxOverrides.remove(_this.cdList,cur);
+						cur.frames = 0;
+						cur.cb = null;
+						_this.fastCheck.remove(cur.k);
+					}
+				} else {
+					_this.fastCheck.h[12582912] = true;
+					if(cur != null) {
+						cur.frames = frames1;
+					} else {
+						_this.cdList.push(new mt__$Cooldown_CdInst(12582912,frames1));
+					}
+				}
+			}
+			tmp = false;
+		}
+		if(!tmp) {
+			var w = hxd_Window.getInstance();
+			if(!w.get_isFocused() && !this.suspended) {
+				this.suspendGame();
+			}
+		}
+	}
+	,__class__: mt_deepnight_GameFocusHelper
+});
 var mt_deepnight_Lib = function() { };
 $hxClasses["mt.deepnight.Lib"] = mt_deepnight_Lib;
 mt_deepnight_Lib.__name__ = "mt.deepnight.Lib";
