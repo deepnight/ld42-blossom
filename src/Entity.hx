@@ -10,7 +10,7 @@ class Entity {
 	public var fx(get,never) : Fx; inline function get_fx() return Game.ME.fx;
 	public var destroyed(default,null) = false;
 	public var cd : mt.Cooldown;
-	public var dt : Float;
+	public var tmod(get,never) : Float; inline function get_tmod() return Game.ME.tmod;
 
 	public var spr : HSprite;
 	public var debug : Null<h2d.Graphics>;
@@ -141,9 +141,8 @@ class Entity {
 			debug.remove();
 	}
 
-	public function preUpdate(dt) {
-		this.dt = dt;
-		cd.update(dt);
+	public function preUpdate() {
+		cd.update(tmod);
 	}
 
 	public function postUpdate() {
@@ -179,9 +178,9 @@ class Entity {
 			debug = null;
 		}
 
-		cAdd.r*=Math.pow(0.8,dt);
-		cAdd.g*=Math.pow(0.7,dt);
-		cAdd.b*=Math.pow(0.7,dt);
+		cAdd.r*=Math.pow(0.8,tmod);
+		cAdd.g*=Math.pow(0.7,tmod);
+		cAdd.b*=Math.pow(0.7,tmod);
 	}
 
 	public function onClick(bt:Int) {
@@ -199,8 +198,8 @@ class Entity {
 
 	public function update() {
 		// X
-		var steps = MLib.ceil( MLib.fabs(dx*dt) );
-		var step = dx*dt / steps;
+		var steps = MLib.ceil( MLib.fabs(dx*tmod) );
+		var step = dx*tmod / steps;
 		while( steps>0 ) {
 			xr+=step;
 			if( hasColl ) {
@@ -219,15 +218,15 @@ class Entity {
 			while( xr<0 ) { xr++; cx--; }
 			steps--;
 		}
-		dx*=Math.pow(frict,dt);
+		dx*=Math.pow(frict,tmod);
 
 		// Gravity
 		if( !onGround && hasGravity )
-			dy += gravity*dt;
+			dy += gravity*tmod;
 
 		// Y
-		var steps = MLib.ceil( MLib.fabs(dy*dt) );
-		var step = dy*dt / steps;
+		var steps = MLib.ceil( MLib.fabs(dy*tmod) );
+		var step = dy*tmod / steps;
 		while( steps>0 ) {
 			yr+=step;
 			if( hasColl ) {
@@ -246,6 +245,6 @@ class Entity {
 			while( yr<0 ) { yr++; cy--; }
 			steps--;
 		}
-		dy*=Math.pow(frict,dt);
+		dy*=Math.pow(frict,tmod);
 	}
 }

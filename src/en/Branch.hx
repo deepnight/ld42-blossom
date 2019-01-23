@@ -233,17 +233,17 @@ class Branch extends Entity {
 			//spr.rotation*=Math.pow(0.96,dt);
 
 		if( hasGravity && cd.has("landed") ) {
-			sprScaleX*=Math.pow(0.99,dt);
-			sprScaleY*=Math.pow(0.99,dt);
+			sprScaleX*=Math.pow(0.99,tmod);
+			sprScaleY*=Math.pow(0.99,tmod);
 			if( sprScaleX<=0.03 )
 				destroy();
 		}
 
 		if( isAlive() ) {
 			if( polluted && power>=pollutedMinPower )
-				power-=0.015*dt;
+				power-=0.015*tmod;
 			if( !polluted && power<1 )
-				power+=0.010*dt;
+				power+=0.010*tmod;
 			power = MLib.fclamp(power,0,1);
 		}
 

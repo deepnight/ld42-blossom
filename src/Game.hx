@@ -271,8 +271,6 @@ class Game extends mt.Process {
 	}
 
 	override public function update() {
-		//cm.update(dt);
-
 		super.update();
 
 		var m = getMouse();
@@ -288,7 +286,7 @@ class Game extends mt.Process {
 		}
 
 		// Updates
-		for(e in Entity.ALL) if( !e.destroyed ) e.preUpdate(dt);
+		for(e in Entity.ALL) if( !e.destroyed ) e.preUpdate();
 		for(e in Entity.ALL) if( !e.destroyed ) e.update();
 		for(e in Entity.ALL) if( !e.destroyed ) e.postUpdate();
 		gc();

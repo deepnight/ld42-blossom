@@ -88,15 +88,15 @@ class Fruit extends Entity {
 
 
 		if( hasGravity && cd.has("landed") ) {
-			sprScaleX*=Math.pow(0.99,dt);
-			sprScaleY*=Math.pow(0.97,dt);
+			sprScaleX*=Math.pow(0.99,tmod);
+			sprScaleY*=Math.pow(0.97,tmod);
 			if( sprScaleX<=0.03 )
 				destroy();
 		}
 
 		if( isAlive() ) {
 			if( !level.hasPollution(cx,cy) && power>0 )
-				power+=0.006*dt;
+				power+=0.006*tmod;
 			power = MLib.fclamp(power, 0, 1);
 		}
 	}
