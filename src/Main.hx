@@ -12,7 +12,7 @@ class Main extends mt.Process {
 
 		Assets.init();
 		new Console();
-		new mt.deepnight.GameFocusHelper(root, Assets.font);
+		new mt.deepnight.GameFocusHelper(Boot.ME.s2d, Assets.font);
 		delayer.addF(startGame,1);
 	}
 
