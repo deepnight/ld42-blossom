@@ -3853,7 +3853,7 @@ var Main = function() {
 	Assets.init();
 	new Console();
 	this.startGame();
-	new mt_deepnight_GameFocusHelper(this.root,Assets.font);
+	new mt_deepnight_GameFocusHelper(Boot.ME.s2d,Assets.font);
 };
 $hxClasses["Main"] = Main;
 Main.__name__ = "Main";
@@ -39158,6 +39158,10 @@ mt_Delayer.prototype = {
 		this.delays.push(new mt__$Delayer_Task(id,this.now + sec * this.fps,cb));
 		haxe_ds_ArraySort.sort(this.delays,$bind(this,this.cmp));
 	}
+	,addF: function(id,cb,frames) {
+		this.delays.push(new mt__$Delayer_Task(id,this.now + frames,cb));
+		haxe_ds_ArraySort.sort(this.delays,$bind(this,this.cmp));
+	}
 	,update: function(dt) {
 		while(this.delays.length > 0 && this.delays[0].t <= this.now) {
 			var d = this.delays.shift();
@@ -39169,14 +39173,14 @@ mt_Delayer.prototype = {
 	,__class__: mt_Delayer
 };
 var mt_deepnight_GameFocusHelper = function(p,font) {
-	this.firstClick = false;
+	this.showIntro = false;
 	this.suspended = false;
 	mt_Process.call(this);
 	this.font = font;
 	this.parentLayers = p;
 	this.createRoot(p);
 	this.root.set_visible(false);
-	this.firstClick = true;
+	this.showIntro = true;
 	this.suspendGame();
 };
 $hxClasses["mt.deepnight.GameFocusHelper"] = mt_deepnight_GameFocusHelper;
@@ -39186,56 +39190,66 @@ mt_deepnight_GameFocusHelper.prototype = $extend(mt_Process.prototype,{
 	suspendGame: function() {
 		var _gthis = this;
 		this.suspended = true;
-		this.parentLayers.over(this.root);
 		this.root.set_visible(true);
 		this.root.removeChildren();
 		var i = new h2d_Interactive(1,1,this.root);
-		i.backgroundColor = this.firstClick ? (255 | 0) << 24 | 2436675 : (229.5 | 0) << 24 | 0;
-		i.onClick = function(_) {
-			_gthis.resumeGame();
-		};
+		i.backgroundColor = this.showIntro ? (255 | 0) << 24 | 2436675 : (198.9 | 0) << 24 | 0;
 		var tf = new h2d_Text(this.font,this.root);
-		var _g = tf;
-		_g.posChanged = true;
-		_g.scaleX *= 3;
-		var _g1 = tf;
-		_g1.posChanged = true;
-		_g1.scaleY *= 3;
-		if(this.firstClick) {
+		if(this.showIntro) {
 			tf.set_text("Click anywhere to start");
 		} else {
 			tf.set_text("PAUSED - click anywhere to resume");
 		}
-		var _g2 = 0;
-		var _g11 = mt_Process.ROOTS;
-		while(_g2 < _g11.length) {
-			var p = _g11[_g2];
-			++_g2;
+		var _g = 0;
+		var _g1 = mt_Process.ROOTS;
+		while(_g < _g1.length) {
+			var p = _g1[_g];
+			++_g;
 			if(p != this) {
 				p.pause();
 			}
 		}
 		this.createChildProcess(function(c) {
-			var v = (mt_Process.CUSTOM_STAGE_WIDTH > 0 ? mt_Process.CUSTOM_STAGE_WIDTH : hxd_Window.getInstance().get_width()) * 0.5 - tf.get_textWidth() * tf.scaleX * 0.5;
+			var y = Math.floor((mt_Process.CUSTOM_STAGE_WIDTH > 0 ? mt_Process.CUSTOM_STAGE_WIDTH : hxd_Window.getInstance().get_width()) * 0.35 / tf.get_textWidth());
+			var v = 1 > y ? 1 : y;
 			tf.posChanged = true;
-			tf.x = v;
-			var v1 = (mt_Process.CUSTOM_STAGE_HEIGHT > 0 ? mt_Process.CUSTOM_STAGE_HEIGHT : hxd_Window.getInstance().get_height()) * 0.5 - tf.get_textHeight() * tf.scaleY * 0.5;
+			tf.scaleX = v;
 			tf.posChanged = true;
-			tf.y = v1;
+			tf.scaleY = v;
+			var v1 = (mt_Process.CUSTOM_STAGE_WIDTH > 0 ? mt_Process.CUSTOM_STAGE_WIDTH : hxd_Window.getInstance().get_width()) * 0.5 - tf.get_textWidth() * tf.scaleX * 0.5 | 0;
+			tf.posChanged = true;
+			tf.x = v1;
+			var v2 = (mt_Process.CUSTOM_STAGE_HEIGHT > 0 ? mt_Process.CUSTOM_STAGE_HEIGHT : hxd_Window.getInstance().get_height()) * 0.5 - tf.get_textHeight() * tf.scaleY * 0.5 | 0;
+			tf.posChanged = true;
+			tf.y = v2;
 			var tmp = mt_Process.CUSTOM_STAGE_WIDTH > 0 ? mt_Process.CUSTOM_STAGE_WIDTH : hxd_Window.getInstance().get_width();
-			i.width = tmp;
+			i.width = tmp + 1;
 			var tmp1 = mt_Process.CUSTOM_STAGE_HEIGHT > 0 ? mt_Process.CUSTOM_STAGE_HEIGHT : hxd_Window.getInstance().get_height();
-			i.height = tmp1;
+			i.height = tmp1 + 1;
 			if(!_gthis.suspended) {
 				c.destroyed = true;
 			}
-		});
-		this.firstClick = false;
+		},null,true);
+		i.onClick = function(_) {
+			tf.set_text("Loading, please wait...");
+			var v3 = (mt_Process.CUSTOM_STAGE_WIDTH > 0 ? mt_Process.CUSTOM_STAGE_WIDTH : hxd_Window.getInstance().get_width()) * 0.5 - tf.get_textWidth() * tf.scaleX * 0.5 | 0;
+			tf.posChanged = true;
+			tf.x = v3;
+			var v4 = (mt_Process.CUSTOM_STAGE_HEIGHT > 0 ? mt_Process.CUSTOM_STAGE_HEIGHT : hxd_Window.getInstance().get_height()) * 0.5 - tf.get_textHeight() * tf.scaleY * 0.5 | 0;
+			tf.posChanged = true;
+			tf.y = v4;
+			_gthis.delayer.addS(null,$bind(_gthis,_gthis.resumeGame),1);
+			i.onClick = null;
+		};
+		this.showIntro = false;
 	}
 	,resumeGame: function() {
+		var _gthis = this;
+		this.delayer.addF(null,function() {
+			_gthis.root.set_visible(false);
+			_gthis.root.removeChildren();
+		},1);
 		this.suspended = false;
-		this.root.set_visible(false);
-		this.root.removeChildren();
 		var _g = 0;
 		var _g1 = mt_Process.ROOTS;
 		while(_g < _g1.length) {
@@ -39248,6 +39262,9 @@ mt_deepnight_GameFocusHelper.prototype = $extend(mt_Process.prototype,{
 	}
 	,update: function() {
 		mt_Process.prototype.update.call(this);
+		if(this.suspended) {
+			this.parentLayers.over(this.root);
+		}
 		var _this = this.cd;
 		var frames = 0.2 * this.cd.baseFps;
 		var tmp;
