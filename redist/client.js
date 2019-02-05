@@ -3852,8 +3852,8 @@ var Main = function() {
 	this.root.set_filter(new h2d_filter_ColorMatrix());
 	Assets.init();
 	new Console();
-	this.startGame();
 	new mt_deepnight_GameFocusHelper(Boot.ME.s2d,Assets.font);
+	this.delayer.addF(null,$bind(this,this.startGame),1);
 };
 $hxClasses["Main"] = Main;
 Main.__name__ = "Main";
@@ -31700,6 +31700,21 @@ hxd_res_Sound.__super__ = hxd_res_Resource;
 hxd_res_Sound.prototype = $extend(hxd_res_Resource.prototype,{
 	__class__: hxd_res_Sound
 });
+var hxd_snd_NativeChannel = function() { };
+$hxClasses["hxd.snd.NativeChannel"] = hxd_snd_NativeChannel;
+hxd_snd_NativeChannel.__name__ = "hxd.snd.NativeChannel";
+hxd_snd_NativeChannel.stopInput = function(_) {
+	if(hxd_snd_NativeChannel.waitDiv == null) {
+		return;
+	}
+	hxd_snd_NativeChannel.waitDiv.remove();
+	hxd_snd_NativeChannel.waitDiv = null;
+	window.document.body.removeEventListener("keydown",hxd_snd_NativeChannel.stopInput);
+	window.document.body.removeEventListener("touchend",hxd_snd_NativeChannel.stopInput);
+	if(hxd_snd_NativeChannel.ctx != null) {
+		hxd_snd_NativeChannel.ctx.resume();
+	}
+};
 var hxsl_Type = $hxEnums["hxsl.Type"] = { __ename__ : true, __constructs__ : ["TVoid","TInt","TBool","TFloat","TString","TVec","TMat3","TMat4","TMat3x4","TBytes","TSampler2D","TSampler2DArray","TSamplerCube","TStruct","TFun","TArray","TBuffer","TChannel"]
 	,TVoid: {_hx_index:0,__enum__:"hxsl.Type",toString:$estr}
 	,TInt: {_hx_index:1,__enum__:"hxsl.Type",toString:$estr}
@@ -39172,16 +39187,18 @@ mt_Delayer.prototype = {
 	}
 	,__class__: mt_Delayer
 };
-var mt_deepnight_GameFocusHelper = function(p,font) {
+var mt_deepnight_GameFocusHelper = function(s,font) {
+	this.oldSprLibTmod = 1.0;
 	this.showIntro = false;
 	this.suspended = false;
 	mt_Process.call(this);
 	this.font = font;
-	this.parentLayers = p;
-	this.createRoot(p);
+	this.scene = s;
+	this.createRoot(this.scene);
 	this.root.set_visible(false);
 	this.showIntro = true;
 	this.suspendGame();
+	hxd_snd_NativeChannel.stopInput(null);
 };
 $hxClasses["mt.deepnight.GameFocusHelper"] = mt_deepnight_GameFocusHelper;
 mt_deepnight_GameFocusHelper.__name__ = "mt.deepnight.GameFocusHelper";
@@ -39189,17 +39206,12 @@ mt_deepnight_GameFocusHelper.__super__ = mt_Process;
 mt_deepnight_GameFocusHelper.prototype = $extend(mt_Process.prototype,{
 	suspendGame: function() {
 		var _gthis = this;
-		this.suspended = true;
-		this.root.set_visible(true);
-		this.root.removeChildren();
-		var i = new h2d_Interactive(1,1,this.root);
-		i.backgroundColor = this.showIntro ? (255 | 0) << 24 | 2436675 : (198.9 | 0) << 24 | 0;
-		var tf = new h2d_Text(this.font,this.root);
-		if(this.showIntro) {
-			tf.set_text("Click anywhere to start");
-		} else {
-			tf.set_text("PAUSED - click anywhere to resume");
+		if(this.suspended) {
+			return;
 		}
+		this.suspended = true;
+		this.oldSprLibTmod = mt_heaps_slib_SpriteLib.TMOD;
+		mt_heaps_slib_SpriteLib.TMOD = 0;
 		var _g = 0;
 		var _g1 = mt_Process.ROOTS;
 		while(_g < _g1.length) {
@@ -39208,6 +39220,16 @@ mt_deepnight_GameFocusHelper.prototype = $extend(mt_Process.prototype,{
 			if(p != this) {
 				p.pause();
 			}
+		}
+		this.root.set_visible(true);
+		this.root.removeChildren();
+		var bg = new h2d_Bitmap(h2d_Tile.fromColor(this.showIntro ? 2436675 : 0,1,1,this.showIntro ? 1 : 0.6),this.root);
+		var i = new h2d_Interactive(1,1,this.root);
+		var tf = new h2d_Text(this.font,this.root);
+		if(this.showIntro) {
+			tf.set_text("Click anywhere to start");
+		} else {
+			tf.set_text("PAUSED - click anywhere to resume");
 		}
 		this.createChildProcess(function(c) {
 			var y = Math.floor((mt_Process.CUSTOM_STAGE_WIDTH > 0 ? mt_Process.CUSTOM_STAGE_WIDTH : hxd_Window.getInstance().get_width()) * 0.35 / tf.get_textWidth());
@@ -39226,25 +39248,42 @@ mt_deepnight_GameFocusHelper.prototype = $extend(mt_Process.prototype,{
 			i.width = tmp + 1;
 			var tmp1 = mt_Process.CUSTOM_STAGE_HEIGHT > 0 ? mt_Process.CUSTOM_STAGE_HEIGHT : hxd_Window.getInstance().get_height();
 			i.height = tmp1 + 1;
+			var v3 = mt_Process.CUSTOM_STAGE_WIDTH > 0 ? mt_Process.CUSTOM_STAGE_WIDTH : hxd_Window.getInstance().get_width();
+			bg.posChanged = true;
+			bg.scaleX = v3 + 1;
+			var v4 = mt_Process.CUSTOM_STAGE_WIDTH > 0 ? mt_Process.CUSTOM_STAGE_WIDTH : hxd_Window.getInstance().get_width();
+			bg.posChanged = true;
+			bg.scaleY = v4 + 1;
 			if(!_gthis.suspended) {
 				c.destroyed = true;
 			}
 		},null,true);
-		i.onClick = function(_) {
-			tf.set_text("Loading, please wait...");
-			var v3 = (mt_Process.CUSTOM_STAGE_WIDTH > 0 ? mt_Process.CUSTOM_STAGE_WIDTH : hxd_Window.getInstance().get_width()) * 0.5 - tf.get_textWidth() * tf.scaleX * 0.5 | 0;
-			tf.posChanged = true;
-			tf.x = v3;
-			var v4 = (mt_Process.CUSTOM_STAGE_HEIGHT > 0 ? mt_Process.CUSTOM_STAGE_HEIGHT : hxd_Window.getInstance().get_height()) * 0.5 - tf.get_textHeight() * tf.scaleY * 0.5 | 0;
-			tf.posChanged = true;
-			tf.y = v4;
-			_gthis.delayer.addS(null,$bind(_gthis,_gthis.resumeGame),1);
-			i.onClick = null;
+		var loadingMsg = this.showIntro;
+		i.onPush = function(_) {
+			if(loadingMsg) {
+				tf.set_text("Loading, please wait...");
+				var v5 = (mt_Process.CUSTOM_STAGE_WIDTH > 0 ? mt_Process.CUSTOM_STAGE_WIDTH : hxd_Window.getInstance().get_width()) * 0.5 - tf.get_textWidth() * tf.scaleX * 0.5 | 0;
+				tf.posChanged = true;
+				tf.x = v5;
+				var v6 = (mt_Process.CUSTOM_STAGE_HEIGHT > 0 ? mt_Process.CUSTOM_STAGE_HEIGHT : hxd_Window.getInstance().get_height()) * 0.5 - tf.get_textHeight() * tf.scaleY * 0.5 | 0;
+				tf.posChanged = true;
+				tf.y = v6;
+				_gthis.delayer.addS(null,$bind(_gthis,_gthis.resumeGame),1);
+			} else {
+				_gthis.resumeGame();
+			}
+			if(i != null && i.parent != null) {
+				i.parent.removeChild(i);
+			}
 		};
 		this.showIntro = false;
 	}
 	,resumeGame: function() {
 		var _gthis = this;
+		if(!this.suspended) {
+			return;
+		}
+		mt_heaps_slib_SpriteLib.TMOD = this.oldSprLibTmod;
 		this.delayer.addF(null,function() {
 			_gthis.root.set_visible(false);
 			_gthis.root.removeChildren();
@@ -39263,7 +39302,7 @@ mt_deepnight_GameFocusHelper.prototype = $extend(mt_Process.prototype,{
 	,update: function() {
 		mt_Process.prototype.update.call(this);
 		if(this.suspended) {
-			this.parentLayers.over(this.root);
+			this.scene.over(this.root);
 		}
 		var _this = this.cd;
 		var frames = 0.2 * this.cd.baseFps;
