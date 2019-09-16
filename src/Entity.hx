@@ -1,6 +1,5 @@
-import mt.MLib;
-import mt.heaps.slib.*;
-import mt.deepnight.Lib;
+import dn.heaps.slib.*;
+import dn.Lib;
 
 class Entity {
 	public static var ALL : Array<Entity> = [];
@@ -9,7 +8,7 @@ class Entity {
 	public var level(get,never) : Level; inline function get_level() return Game.ME.level;
 	public var fx(get,never) : Fx; inline function get_fx() return Game.ME.fx;
 	public var destroyed(default,null) = false;
-	public var cd : mt.Cooldown;
+	public var cd : dn.Cooldown;
 	public var tmod(get,never) : Float; inline function get_tmod() return Game.ME.tmod;
 
 	public var spr : HSprite;
@@ -39,11 +38,11 @@ class Entity {
 		uid = Const.UNIQ++;
 		ALL.push(this);
 
-		cd = new mt.Cooldown(Const.FPS);
+		cd = new dn.Cooldown(Const.FPS);
 		setPosCase(x,y);
 
-		spr = new mt.heaps.slib.HSprite(Assets.tiles);
-		//spr = new mt.heaps.slib.HSprite(Assets.gameElements);
+		spr = new dn.heaps.slib.HSprite(Assets.tiles);
+		//spr = new dn.heaps.slib.HSprite(Assets.gameElements);
 		game.scroller.add(spr, Const.DP_BG);
 		spr.setCenterRatio(0.5,0.5);
 		cAdd = new h3d.Vector();
@@ -106,7 +105,7 @@ class Entity {
 	public inline function pretty(v,?p=1) return Lib.prettyFloat(v,p);
 
 	public function sightCheckCase(x:Int,y:Int) {
-		return mt.deepnight.Bresenham.checkThinLine(cx,cy,x,y, function(x,y) return !level.hasColl(x,y));
+		return dn.Bresenham.checkThinLine(cx,cy,x,y, function(x,y) return !level.hasColl(x,y));
 	}
 
 	public inline function distCase(e:Entity) {
@@ -198,7 +197,7 @@ class Entity {
 
 	public function update() {
 		// X
-		var steps = MLib.ceil( MLib.fabs(dx*tmod) );
+		var steps = M.ceil( M.fabs(dx*tmod) );
 		var step = dx*tmod / steps;
 		while( steps>0 ) {
 			xr+=step;
@@ -225,7 +224,7 @@ class Entity {
 			dy += gravity*tmod;
 
 		// Y
-		var steps = MLib.ceil( MLib.fabs(dy*tmod) );
+		var steps = M.ceil( M.fabs(dy*tmod) );
 		var step = dy*tmod / steps;
 		while( steps>0 ) {
 			yr+=step;

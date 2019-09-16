@@ -1,7 +1,6 @@
-import mt.deepnight.Lib;
-import mt.MLib;
+import dn.Lib;
 
-class Viewport extends mt.Process {
+class Viewport extends dn.Process {
 	public static var PARALAX = 0.4;
 	var game(get,never) : Game; inline function get_game() return Game.ME;
 	var level(get,never) : Level; inline function get_level() return Game.ME.level;
@@ -23,11 +22,11 @@ class Viewport extends mt.Process {
 	inline function get_screenHei() return Boot.ME.s2d.height;
 
 	inline function get_wid() {
-		return MLib.ceil( Boot.ME.s2d.width / Const.SCALE );
+		return M.ceil( Boot.ME.s2d.width / Const.SCALE );
 	}
 
 	inline function get_hei() {
-		return MLib.ceil( Boot.ME.s2d.height / Const.SCALE );
+		return M.ceil( Boot.ME.s2d.height / Const.SCALE );
 	}
 
 	public function repos(e:Entity) {
@@ -46,10 +45,10 @@ class Viewport extends mt.Process {
 		//tx/=n;
 		//ty/=n;
 		//var a = Math.atan2(ty-y, tx-x);
-		//var d = mt.deepnight.Lib.distance(x, y, tx, ty);
+		//var d = dn.Lib.distance(x, y, tx, ty);
 		//if( d>=10 ) {
-			//var s = 0.5 * MLib.fclamp(d/100,0,1);
-			////var s = 0.03 + 0.8 * MLib.fclamp(d/100,0,1);
+			//var s = 0.5 * M.fclamp(d/100,0,1);
+			////var s = 0.03 + 0.8 * M.fclamp(d/100,0,1);
 			//dx+=Math.cos(a)*s;
 			//dy+=Math.sin(a)*s;
 		//}
@@ -69,8 +68,8 @@ class Viewport extends mt.Process {
 				//dy*=0.8;
 			//}
 		//}
-		x = MLib.fclamp(x,wid*0.5,level.wid*Const.GRID-wid*0.5);
-		y = MLib.fclamp(y,hei*0.5,level.hei*Const.GRID-hei*0.5);
+		x = M.fclamp(x,wid*0.5,level.wid*Const.GRID-wid*0.5);
+		y = M.fclamp(y,hei*0.5,level.hei*Const.GRID-hei*0.5);
 		game.scroller.x = Std.int( -x + wid*0.5 );
 		game.scroller.y = Std.int( -y + hei*0.5 );
 		game.level.bg.x = game.scroller.x*PARALAX;

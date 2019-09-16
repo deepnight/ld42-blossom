@@ -1,4 +1,3 @@
-import mt.MLib;
 import hxd.Key;
 
 class Boot extends hxd.App {
@@ -24,7 +23,7 @@ class Boot extends hxd.App {
 
 	override function onResize() {
 		super.onResize();
-		mt.Process.resizeAll();
+		dn.Process.resizeAll();
 	}
 
 	override function update(deltaTime:Float) {
@@ -47,9 +46,9 @@ class Boot extends hxd.App {
 		}
 		#end
 
-		mt.heaps.slib.SpriteLib.TMOD = tmod*speed;
+		dn.heaps.slib.SpriteLib.TMOD = tmod*speed;
 		if( speed>0 )
-			mt.Process.updateAll(tmod*speed);
+			dn.Process.updateAll(tmod*speed);
 	}
 }
 

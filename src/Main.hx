@@ -1,7 +1,6 @@
-import mt.Process;
-import mt.MLib;
+import dn.Process;
 
-class Main extends mt.Process {
+class Main extends dn.Process {
 	public static var ME : Main;
 
 	public function new() {
@@ -12,7 +11,7 @@ class Main extends mt.Process {
 
 		Assets.init();
 		new Console();
-		new mt.deepnight.GameFocusHelper(Boot.ME.s2d, Assets.font);
+		new dn.heaps.GameFocusHelper(Boot.ME.s2d, Assets.font);
 		delayer.addF(startGame,1);
 	}
 
@@ -31,11 +30,11 @@ class Main extends mt.Process {
 	override public function onResize() {
 		super.onResize();
 
-		Const.SCALE = MLib.floor( w() / (25*Const.GRID) );
+		Const.SCALE = M.floor( w() / (25*Const.GRID) );
 		root.scaleX = root.scaleY = Const.SCALE;
 
-		// cached.width = MLib.ceil(Boot.ME.s2d.width/cached.scaleX);
-		// cached.height = MLib.ceil(Boot.ME.s2d.height/cached.scaleY);
+		// cached.width = M.ceil(Boot.ME.s2d.width/cached.scaleX);
+		// cached.height = M.ceil(Boot.ME.s2d.height/cached.scaleY);
 	}
 
 	override public function update() {

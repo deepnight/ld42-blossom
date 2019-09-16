@@ -1,5 +1,5 @@
-import mt.heaps.slib.*;
-import mt.deepnight.Sfx;
+import dn.heaps.slib.*;
+import dn.heaps.Sfx;
 
 class Assets {
 	public static var SBANK = Sfx.importDirectory("sfx");
@@ -15,12 +15,12 @@ class Assets {
 		#end
 
 		//#if hl
-		//music = new mt.deepnight.Sfx( hxd.Res.music.music );
+		//music = new dn.Sfx( hxd.Res.music.music );
 		//#else
-		//music = new mt.deepnight.Sfx( hxd.Res.music.f_music );
+		//music = new dn.Sfx( hxd.Res.music.f_music );
 		//#end
 
-		tiles = mt.heaps.slib.assets.Atlas.load("tiles.atlas");
+		tiles = dn.heaps.slib.assets.Atlas.load("tiles.atlas");
 		//tiles.defineAnim("heroAimShoot","0(10), 1(10)");
 
 		font = hxd.Res.minecraftiaOutline.toFont();

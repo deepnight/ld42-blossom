@@ -1,8 +1,7 @@
 package en;
 
-import mt.heaps.slib.*;
-import mt.MLib;
-import mt.deepnight.Lib;
+import dn.heaps.slib.*;
+import dn.Lib;
 
 class Fruit extends Entity {
 	public static var ALL : Array<Fruit> = [];
@@ -53,7 +52,7 @@ class Fruit extends Entity {
 				new en.Branch(cx,cy);
 			}, 0.1);
 			//#else
-			//new en.Branch(cx,cy, mt.deepnight.Color.makeColorHsl(game.teintHue,0.7,0.6));
+			//new en.Branch(cx,cy, dn.Color.makeColorHsl(game.teintHue,0.7,0.6));
 			//#end
 			game.teintHue+=0.2;
 		}
@@ -97,7 +96,7 @@ class Fruit extends Entity {
 		if( isAlive() ) {
 			if( !level.hasPollution(cx,cy) && power>0 )
 				power+=0.006*tmod;
-			power = MLib.fclamp(power, 0, 1);
+			power = M.fclamp(power, 0, 1);
 		}
 	}
 }

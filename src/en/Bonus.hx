@@ -1,8 +1,7 @@
 package en;
 
-import mt.heaps.slib.*;
-import mt.MLib;
-import mt.deepnight.Lib;
+import dn.heaps.slib.*;
+import dn.Lib;
 
 class Bonus extends Entity {
 	public static var ALL : Array<Bonus> = [];

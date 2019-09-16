@@ -1,8 +1,7 @@
 package en;
 
-import mt.heaps.slib.*;
-import mt.MLib;
-import mt.deepnight.Lib;
+import dn.heaps.slib.*;
+import dn.Lib;
 
 class Branch extends Entity {
 	public static var ALL : Array<Branch> = [];
@@ -186,7 +185,7 @@ class Branch extends Entity {
 	}
 
 	function getThickness() {
-		return 1.0 - 0.85 * MLib.fclamp(getTreeDepth()/Const.MAX_TREE_DEPTH, 0, 1);
+		return 1.0 - 0.85 * M.fclamp(getTreeDepth()/Const.MAX_TREE_DEPTH, 0, 1);
 	}
 
 	public inline function isRoot() {
@@ -244,7 +243,7 @@ class Branch extends Entity {
 				power-=0.015*tmod;
 			if( !polluted && power<1 )
 				power+=0.010*tmod;
-			power = MLib.fclamp(power,0,1);
+			power = M.fclamp(power,0,1);
 		}
 
 		// Energy consumption

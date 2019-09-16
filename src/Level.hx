@@ -1,10 +1,9 @@
 package;
 
-import mt.MLib;
-import mt.deepnight.Color;
-import mt.heaps.slib.*;
+import dn.Color;
+import dn.heaps.slib.*;
 
-class Level extends mt.Process {
+class Level extends dn.Process {
 	public var wid : Int;
 	public var hei : Int;
 	public var bg : h2d.Object;
@@ -38,7 +37,7 @@ class Level extends mt.Process {
 		pixels = new Map();
 		for(cy in 0...hei)
 		for(cx in 0...wid) {
-			var c = mt.deepnight.Color.removeAlpha( bd.getPixel(cx,cy) );
+			var c = dn.Color.removeAlpha( bd.getPixel(cx,cy) );
 			if( !pixels.exists(c) )
 				pixels.set(c, []);
 			pixels.get(c).push( new CPoint(cx,cy) );

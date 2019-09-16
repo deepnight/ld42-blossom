@@ -1,12 +1,11 @@
-import mt.Process;
-import mt.deepnight.Tweenie;
-import mt.deepnight.Lib;
-import mt.heaps.slib.*;
-import mt.MLib;
+import dn.Process;
+import dn.Tweenie;
+import dn.Lib;
+import dn.heaps.slib.*;
 import hxd.Key;
 import Entity;
 
-class Game extends mt.Process {
+class Game extends dn.Process {
 	public static var ME : Game;
 
 	public var scroller : h2d.Layers;
@@ -22,7 +21,7 @@ class Game extends mt.Process {
 	public var hud : h2d.Flow;
 	//public var treeRoot : en.Branch;
 	public var mouseScroll : { x:Int, y:Int, scrolling:Bool, active:Bool }
-	//public var cm : mt.deepnight.Cinematic;
+	//public var cm : dn.Cinematic;
 	var linkPreview : h2d.Graphics;
 	var barBg : HSprite;
 	var bar : HSprite;
@@ -36,7 +35,7 @@ class Game extends mt.Process {
 		createRoot(ctx);
 		//Console.ME.runCommand("+ bounds");
 
-		//cm = new mt.deepnight.Cinematic(Const.FPS);
+		//cm = new dn.Cinematic(Const.FPS);
 
 		scroller = new h2d.Layers();
 		root.add(scroller,Const.DP_BG);
@@ -120,7 +119,7 @@ class Game extends mt.Process {
 		cd.unset("invalidateHud");
 
 		bar.setPos(1,1);
-		bar.scaleX = MLib.fclamp(energy/Const.MAX_ENERGY,0,1) * (barBg.tile.width-2);
+		bar.scaleX = M.fclamp(energy/Const.MAX_ENERGY,0,1) * (barBg.tile.width-2);
 		barBg.set(energy<=Const.BUY ? "barBgOff" : "barBg");
 		barThreshold.x = 1+Const.BUY/Const.MAX_ENERGY * (barBg.tile.width-2);
 
@@ -136,13 +135,13 @@ class Game extends mt.Process {
 		if( Math.isNaN(v) )
 			throw "illegal rem v="+v;
 		energy-=v;
-		energy = MLib.fmax(0,energy);
+		energy = M.fmax(0,energy);
 	}
 	public function addEnergy(v:Float) {
 		if( Math.isNaN(v) )
 			throw "illegal add v="+v;
 		energy+=v;
-		energy = MLib.fmin(Const.MAX_ENERGY,energy);
+		energy = M.fmin(Const.MAX_ENERGY,energy);
 	}
 
 	function onMouseDown(ev:hxd.Event) {
@@ -185,7 +184,7 @@ class Game extends mt.Process {
 				return null;
 
 		var dh = new DecisionHelper(en.Branch.ALL);
-		dh.keepOnly( function(e) return !e.cd.has("locked") && e.isAlive() && MLib.fabs(e.cx-cx)<=1 && MLib.fabs(e.cy-cy)<=1 && e.getTreeDepth()<=Const.MAX_TREE_DEPTH );
+		dh.keepOnly( function(e) return !e.cd.has("locked") && e.isAlive() && M.fabs(e.cx-cx)<=1 && M.fabs(e.cy-cy)<=1 && e.getTreeDepth()<=Const.MAX_TREE_DEPTH );
 		if( dh.countRemaining()==0 )
 			return null;
 		dh.score( function(e) return -e.distPxFree(x,y)*0.1 );
@@ -197,8 +196,8 @@ class Game extends mt.Process {
 
 		var a = Math.atan2(cy-e.cy, cx-e.cx);
 		return {
-			fcx : e.cx+MLib.round(Math.cos(a)*1),
-			fcy : e.cy+MLib.round(Math.sin(a)*1),
+			fcx : e.cx+M.round(Math.cos(a)*1),
+			fcy : e.cy+M.round(Math.sin(a)*1),
 			to : e,
 		}
 	}

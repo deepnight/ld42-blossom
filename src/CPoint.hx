@@ -1,5 +1,4 @@
-import mt.MLib;
-import mt.deepnight.Lib;
+import dn.Lib;
 
 class CPoint {
 	public var cx = 0;
