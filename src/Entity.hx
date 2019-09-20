@@ -102,7 +102,7 @@ class Entity {
 
 	public inline function rnd(min,max,?sign) return Lib.rnd(min,max,sign);
 	public inline function irnd(min,max,?sign) return Lib.irnd(min,max,sign);
-	public inline function pretty(v,?p=1) return Lib.prettyFloat(v,p);
+	public inline function pretty(v,?p=1) return M.pretty(v,p);
 
 	public function sightCheckCase(x:Int,y:Int) {
 		return dn.Bresenham.checkThinLine(cx,cy,x,y, function(x,y) return !level.hasColl(x,y));
