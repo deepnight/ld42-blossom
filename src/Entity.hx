@@ -109,15 +109,15 @@ class Entity {
 	}
 
 	public inline function distCase(e:Entity) {
-		return Lib.distance(cx+xr, cy+yr, e.cx+e.xr, e.cy+e.yr);
+		return M.dist(cx+xr, cy+yr, e.cx+e.xr, e.cy+e.yr);
 	}
 
 	public inline function distPx(e:Entity) {
-		return Lib.distance(centerX, centerY, e.centerX, e.centerY);
+		return M.dist(centerX, centerY, e.centerX, e.centerY);
 	}
 
 	public inline function distPxFree(x:Float, y:Float) {
-		return Lib.distance(centerX, centerY, x, y);
+		return M.dist(centerX, centerY, x, y);
 	}
 
 	public inline function angTo(e:Entity) return Math.atan2(e.centerY-centerY, e.centerX-centerX);

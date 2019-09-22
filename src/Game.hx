@@ -274,7 +274,7 @@ class Game extends dn.Process {
 
 		var m = getMouse();
 		if( mouseScroll.active ) {
-			if( !mouseScroll.scrolling && Lib.distance(m.x,m.y, mouseScroll.x,mouseScroll.y)>=5 )
+			if( !mouseScroll.scrolling && M.dist(m.x,m.y, mouseScroll.x,mouseScroll.y)>=5 )
 				mouseScroll.scrolling = true;
 
 			if( mouseScroll.scrolling ) {
