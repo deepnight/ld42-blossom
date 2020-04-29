@@ -2,7 +2,7 @@ import dn.heaps.slib.*;
 import dn.heaps.Sfx;
 
 class Assets {
-	public static var SBANK = Sfx.importDirectory("sfx");
+	public static var SBANK = dn.heaps.assets.SfxDirectory.load("sfx");
 	public static var tiles : SpriteLib;
 	public static var font : h2d.Font;
 	//public static var music : Sfx;
@@ -20,7 +20,7 @@ class Assets {
 		//music = new dn.Sfx( hxd.Res.music.f_music );
 		//#end
 
-		tiles = dn.heaps.slib.assets.Atlas.load("tiles.atlas");
+		tiles = dn.heaps.assets.Atlas.load("tiles.atlas");
 		//tiles.defineAnim("heroAimShoot","0(10), 1(10)");
 
 		font = hxd.Res.minecraftiaOutline.toFont();
